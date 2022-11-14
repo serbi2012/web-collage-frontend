@@ -1,5 +1,6 @@
 import React from "react";
 import { useEffect } from "react";
+import { useState } from "react";
 import { useRef } from "react";
 import styled from "styled-components";
 import COLORS from "../../constants/COLORS";
@@ -20,11 +21,20 @@ const ScrapWindowContainer = styled.div`
     background: ${COLORS.MAIN_COLOR};
     cursor: col-resize;
   }
+
+  .ScrapWindow-fullscreen {
+    position: absolute;
+    bottom: 0;
+    user-select: none;
+    cursor: pointer;
+  }
 `;
 
 const ScrapWindow = () => {
   const ref = useRef(null);
   const refRight = useRef(null);
+
+  const [isFullScreen, setIsFullScreen] = useState(false);
 
   useEffect(() => {
     const resizableEle = ref.current;
@@ -67,6 +77,26 @@ const ScrapWindow = () => {
     <ScrapWindowContainer ref={ref} className="resizable">
       <div className="contentBox"></div>
       <div ref={refRight} className="resizer-r"></div>
+      <div
+        className="ScrapWindow-fullscreen"
+        onClick={() => {
+          const webWindow = document.getElementById("webWindow");
+
+          if (isFullScreen) {
+            webWindow.style.display = "none";
+            ref.current.style.width = `calc((100vw - 70px)`;
+            webWindow.style.width = `0px`;
+          } else {
+            webWindow.style.display = "flex";
+            ref.current.style.width = `calc((100vw - 70px) / 2)`;
+            webWindow.style.width = `calc((100vw - 70px) / 2)`;
+          }
+
+          setIsFullScreen(!isFullScreen);
+        }}
+      >
+        <span class="material-symbols-outlined">fullscreen</span>
+      </div>
     </ScrapWindowContainer>
   );
 };
