@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
 const WebWindowContainer = styled.div`
   display: flex;
@@ -20,7 +20,7 @@ const WebWindow = () => {
   return (
     <WebWindowContainer>
       <iframe
-        src="https://ko.reactjs.org/"
+        src="https://www.google.com/"
         sandbox="allow-scripts allow-modals allow-top-navigation allow-same-origin allow-forms allow-popups"
         allow="clipboard-read; clipboard-write"
       />

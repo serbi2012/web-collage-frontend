@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import styled from "styled-components";
+import COLORS from "../../constants/COLORS";
 
 const SidebarContainer = styled.div`
   display: flex;
@@ -9,7 +10,7 @@ const SidebarContainer = styled.div`
   flex-direction: column;
   width: 70px;
   height: 100vh;
-  background-color: #27292d;
+  background-color: ${COLORS.MAIN_COLOR};
   transition: all 0.3s ease-in-out;
 
   .Sidebar-tools {
@@ -20,7 +21,7 @@ const SidebarContainer = styled.div`
     padding: 5px;
     height: 35px;
     width: 35px;
-    color: white;
+    color: ${COLORS.SUB_COLOR};
     border: 3px solid transparent;
     border-radius: 10px;
     user-select: none;
@@ -44,8 +45,8 @@ const SidebarContainer = styled.div`
     padding: 5px;
     height: 35px;
     width: 35px;
-    color: #27292d;
-    background-color: white;
+    color: ${COLORS.MAIN_COLOR};
+    background-color: ${COLORS.SUB_COLOR};
     border-radius: 10px;
     transform: rotate(180deg);
     user-select: none;
@@ -102,8 +103,10 @@ const Sidebar = () => {
       <div
         className="Sidebar-folding"
         style={{
-          backgroundColor: isFold ? "#27292d" : "white",
-          color: isFold ? "white" : "#27292d",
+          backgroundColor: isFold
+            ? `${COLORS.MAIN_COLOR}`
+            : `${COLORS.SUB_COLOR}`,
+          color: isFold ? `${COLORS.SUB_COLOR}` : `${COLORS.MAIN_COLOR}`,
           transform: isFold ? "translateX(100px)" : "translateX(0px)",
         }}
         onClick={() => {
@@ -113,7 +116,7 @@ const Sidebar = () => {
         <span
           className="material-symbols-outlined"
           style={{
-            transform: isFold ? "rotate(180deg)" : "rotate(0deg)",
+            transform: isFold ? "rotate(0deg)" : "rotate(180deg)",
           }}
         >
           logout
