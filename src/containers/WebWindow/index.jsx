@@ -1,4 +1,5 @@
 import React from "react";
+import { useRef } from "react";
 import { useState } from "react";
 import styled from "styled-components";
 import COLORS from "../../constants/COLORS";
@@ -82,6 +83,33 @@ const WebWindowContainer = styled.div`
     }
   }
 
+  .WebWindow-ratioButton {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    right: 10px;
+    bottom: 10px;
+    width: 130px;
+    height: 40px;
+    background-color: ${COLORS.SUB_COLOR};
+    border-radius: 10px;
+
+    span {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 20px;
+    }
+
+    div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 40px;
+    }
+  }
+
   iframe {
     height: 100%;
     width: 100%;
@@ -130,6 +158,11 @@ const WebWindow = () => {
           <span class="material-symbols-outlined">arrow_drop_up</span>
           <span class="material-symbols-outlined">arrow_drop_down</span>
         </div>
+      </div>
+      <div className="WebWindow-ratioButton">
+        <span>-</span>
+        <div>100%</div>
+        <span>+</span>
       </div>
       <iframe
         src={urlAddress}
