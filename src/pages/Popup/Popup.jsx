@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
 const PopupContainer = styled.div`
   position: absolute;
@@ -22,7 +22,7 @@ const PopupContainer = styled.div`
     width: 200px;
   }
 
-  .App-header {
+  .Popup-header {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -32,7 +32,7 @@ const PopupContainer = styled.div`
     color: white;
   }
 
-  .App-startScrap {
+  .Popup-collageButton {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -46,15 +46,15 @@ const PopupContainer = styled.div`
     transition: all 0.2s ease-in-out;
   }
 
-  .App-startScrap:hover {
+  .Popup-collageButton:hover {
     background-color: hsl(0, 0%, 90%);
   }
 
-  .App-startScrap:active {
+  .Popup-collageButton:active {
     background-color: hsl(0, 0%, 70%);
   }
 
-  .App-startScrap > span {
+  .Popup-collageButton > span {
     font-size: 50px;
   }
 `;
@@ -62,13 +62,13 @@ const PopupContainer = styled.div`
 const Popup = () => {
   return (
     <PopupContainer>
-      <header className="App-header">
+      <header className="Popup-header">
         <h1>Web Collage</h1>
       </header>
       <div
-        className="App-startScrap"
+        className="Popup-collageButton"
         onClick={() => {
-          window.open('main.html');
+          window.open("main.html");
         }}
       >
         <span className="material-symbols-outlined">file_copy</span>
