@@ -13,11 +13,7 @@ const ScrapWindowContainer = styled.div`
 `;
 
 const ScrapWindow = () => {
-  return (
-    <ScrapWindowContainer>
-      <div></div>
-    </ScrapWindowContainer>
-  );
+  return <ScrapWindowContainer></ScrapWindowContainer>;
 };
 
 export default ScrapWindow;
