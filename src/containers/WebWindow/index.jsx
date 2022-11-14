@@ -8,8 +8,8 @@ const WebWindowContainer = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  width: calc((100vw - 70px) / 2);
   height: 100vh;
+  width: calc((100vw - 70px) / 2);
 
   .WebWindow-addressBarBox {
     display: flex;
@@ -95,7 +95,7 @@ const WebWindow = () => {
   const [isAddressBarFold, setIsAddressBarFold] = useState(true);
 
   return (
-    <WebWindowContainer>
+    <WebWindowContainer id="webWindow">
       <div
         className="WebWindow-addressBarBox"
         style={{
