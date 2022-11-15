@@ -1,6 +1,6 @@
+import axios from "axios";
 import React from "react";
-import { useRef } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import COLORS from "../../constants/COLORS";
 
@@ -11,6 +11,7 @@ const WebWindowContainer = styled.div`
   flex-direction: column;
   height: 100vh;
   width: calc((100vw - 70px) / 2);
+  overflow-y: scroll;
 
   .WebWindow-addressBarBox {
     display: flex;
@@ -117,10 +118,28 @@ const WebWindowContainer = styled.div`
   }
 `;
 
+const BodyContainer = styled.div`
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
+`;
+
 const WebWindow = () => {
-  const [urlAddress, setUrlAddress] = useState("https://www.google.com/");
   const [urlInput, setUrlInput] = useState("");
+  const [iframeDom, setIframeDom] = useState(null);
   const [isAddressBarFold, setIsAddressBarFold] = useState(true);
+
+  window.addEventListener("click", (event) => {
+    event.target.style.backgroundColor = "red";
+  });
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await axios.get("https://www.naver.com");
+
+      setIframeDom(data);
+    })();
+  }, []);
 
   return (
     <WebWindowContainer id="webWindow">
@@ -131,15 +150,17 @@ const WebWindow = () => {
         }}
       >
         <input
-          defaultValue={urlAddress}
+          defaultValue="https://www.naver.com"
           onChange={(event) => {
             setUrlInput(event.target.value);
           }}
         />
         <span
           className="material-symbols-outlined WebWindow-changeUrlButton"
-          onClick={() => {
-            setUrlAddress(urlInput);
+          onClick={async () => {
+            const { data } = await axios.get(urlInput);
+
+            setIframeDom(data);
           }}
         >
           arrow_forward
@@ -155,8 +176,8 @@ const WebWindow = () => {
               : "translateY(-15px)",
           }}
         >
-          <span class="material-symbols-outlined">arrow_drop_up</span>
-          <span class="material-symbols-outlined">arrow_drop_down</span>
+          <span className="material-symbols-outlined">arrow_drop_up</span>
+          <span className="material-symbols-outlined">arrow_drop_down</span>
         </div>
       </div>
       <div className="WebWindow-ratioButton">
@@ -164,10 +185,7 @@ const WebWindow = () => {
         <div>100%</div>
         <span>+</span>
       </div>
-      <iframe
-        src={urlAddress}
-        sandbox="allow-scripts allow-modals allow-top-navigation allow-same-origin allow-forms allow-popups allow-pointer-lock allow-popups-to-escape-sandbox"
-      />
+      <BodyContainer dangerouslySetInnerHTML={{ __html: iframeDom }} />
     </WebWindowContainer>
   );
 };
