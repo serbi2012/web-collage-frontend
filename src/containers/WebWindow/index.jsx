@@ -23,7 +23,9 @@ const WebWindowContainer = styled.div`
     top: 20px;
     background-color: ${COLORS.SUB_COLOR};
     border-radius: 5px;
+    box-shadow: 1px 2px 3px 0px rgba(0, 0, 0, 0.2);
     transition: all 0.4s ease-in-out;
+    z-index: 2000000;
 
     input {
       padding: 5px 10px;
@@ -69,6 +71,7 @@ const WebWindowContainer = styled.div`
       width: 50px;
       color: ${COLORS.MAIN_COLOR};
       border-radius: 50px;
+      box-shadow: 1px 2px 3px 0px rgba(0, 0, 0, 0.2);
       user-select: none;
       cursor: pointer;
       transition: all 0.4s ease-in-out;
@@ -95,6 +98,8 @@ const WebWindowContainer = styled.div`
     height: 40px;
     background-color: ${COLORS.SUB_COLOR};
     border-radius: 10px;
+    box-shadow: 1px 2px 3px 0px rgba(0, 0, 0, 0.2);
+    z-index: 2000000;
 
     span {
       display: flex;
@@ -116,6 +121,10 @@ const WebWindowContainer = styled.div`
     width: 100%;
     border: none;
   }
+
+  .selectedDom {
+    border: 2px solid red;
+  }
 `;
 
 const BodyContainer = styled.div`
@@ -129,11 +138,17 @@ const WebWindow = () => {
   const [iframeDom, setIframeDom] = useState(null);
   const [isAddressBarFold, setIsAddressBarFold] = useState(true);
 
-  window.addEventListener("click", (event) => {
-    event.target.style.backgroundColor = "red";
-  });
-
   useEffect(() => {
+    const webWindow = document.getElementById("webWindowContent");
+
+    webWindow.addEventListener("mouseover", (event) => {
+      event.target.classList.add("selectedDom");
+    });
+
+    webWindow.addEventListener("mouseout", (event) => {
+      event.target.classList.remove("selectedDom");
+    });
+
     (async () => {
       const { data } = await axios.get("https://www.naver.com");
 
@@ -146,7 +161,7 @@ const WebWindow = () => {
       <div
         className="WebWindow-addressBarBox"
         style={{
-          transform: isAddressBarFold ? "translateY(-60px)" : "translateY(0px)",
+          transform: isAddressBarFold ? "translateY(-70px)" : "translateY(0px)",
         }}
       >
         <input
@@ -172,7 +187,7 @@ const WebWindow = () => {
           }}
           style={{
             transform: isAddressBarFold
-              ? "translateY(15px)"
+              ? "translateY(25px)"
               : "translateY(-15px)",
           }}
         >
@@ -185,7 +200,10 @@ const WebWindow = () => {
         <div>100%</div>
         <span>+</span>
       </div>
-      <BodyContainer dangerouslySetInnerHTML={{ __html: iframeDom }} />
+      <BodyContainer
+        id="webWindowContent"
+        dangerouslySetInnerHTML={{ __html: iframeDom }}
+      />
     </WebWindowContainer>
   );
 };
