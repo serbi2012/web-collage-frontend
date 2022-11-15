@@ -1,5 +1,5 @@
 import axios from "axios";
-import React from "react";
+import React, { useRef } from "react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
@@ -141,15 +141,25 @@ const BodyContainer = styled.div`
 `;
 
 const WebWindow = () => {
+  const blockRef = useRef(null);
+  const webWindowRef = useRef(null);
+
   const { urlAddress } = useSelector(({ urlAddress }) => urlAddress);
 
   const [iframeDom, setIframeDom] = useState(null);
+  const [selectedBlock, setSelectedBlock] = useState(null);
   const [isAddressBarFold, setIsAddressBarFold] = useState(true);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const webWindow = document.getElementById("webWindowContent");
+    const webWindow = webWindowRef.current;
+    const block = blockRef.current;
+
+    let isDrag = false;
+    let selectedElement;
+    let positionX = 0;
+    let positionY = 0;
 
     webWindow.addEventListener("mouseover", (event) => {
       event.target.classList.add("selectedDom");
@@ -160,9 +170,37 @@ const WebWindow = () => {
     });
 
     webWindow.addEventListener("mousedown", (event) => {
-      const selectedElement = event.target;
+      isDrag = true;
+      block.style.display = "flex";
+      selectedElement = event.target;
 
-      dispatch(addBlocks(selectedElement.outerHTML));
+      setSelectedBlock(selectedElement.outerHTML);
+
+      positionY = event.target.offsetTop;
+      positionX = event.target.offsetLeft;
+      block.style.top = `${positionY}px`;
+      block.style.left = `${positionX}px`;
+    });
+
+    window.addEventListener("mousemove", (event) => {
+      if (!isDrag) return;
+
+      block.style.top = `${event.clientY}px`;
+      block.style.left = `${event.clientX}px`;
+    });
+
+    window.addEventListener("mouseup", (event) => {
+      if (!isDrag) return;
+
+      isDrag = false;
+      block.style.top = `${event.clientY}px`;
+      block.style.left = `${event.clientX}px`;
+
+      if (webWindow.offsetLeft > event.clientX) {
+        dispatch(addBlocks(selectedElement.outerHTML));
+      }
+
+      block.style.display = "none";
     });
 
     (async () => {
@@ -181,7 +219,13 @@ const WebWindow = () => {
   }, []);
 
   return (
-    <WebWindowContainer id="webWindow">
+    <WebWindowContainer id="webWindow" ref={webWindowRef}>
+      <div
+        id="selectedBlock"
+        ref={blockRef}
+        style={{ position: "absolute" }}
+        dangerouslySetInnerHTML={{ __html: selectedBlock }}
+      />
       <div
         className="WebWindow-addressBarBox"
         style={{
