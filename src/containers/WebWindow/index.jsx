@@ -1,8 +1,13 @@
 import axios from "axios";
 import React from "react";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import deleteCookie from "../../../utils/deleteCookie";
+import getCookie from "../../../utils/getCookie";
 import COLORS from "../../constants/COLORS";
+import { setUrlAddress } from "../../redux/reducers/urlAddress";
+import Block from "../Block";
 
 const WebWindowContainer = styled.div`
   display: flex;
@@ -123,7 +128,8 @@ const WebWindowContainer = styled.div`
   }
 
   .selectedDom {
-    border: 2px solid red;
+    border: 2px solid #ff6767;
+    border-radius: 2px;
   }
 `;
 
@@ -134,12 +140,18 @@ const BodyContainer = styled.div`
 `;
 
 const WebWindow = () => {
-  const [urlInput, setUrlInput] = useState("");
+  const { urlAddress } = useSelector(({ urlAddress }) => urlAddress);
+
   const [iframeDom, setIframeDom] = useState(null);
   const [isAddressBarFold, setIsAddressBarFold] = useState(true);
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
     const webWindow = document.getElementById("webWindowContent");
+    const scrapWindowContentBox = document.getElementById(
+      "scrapWindowContentBox"
+    );
 
     webWindow.addEventListener("mouseover", (event) => {
       event.target.classList.add("selectedDom");
@@ -149,8 +161,25 @@ const WebWindow = () => {
       event.target.classList.remove("selectedDom");
     });
 
+    webWindow.addEventListener("mousedown", (event) => {
+      const selectedElement = event.target;
+
+      scrapWindowContentBox.insertAdjacentElement(
+        "beforeend",
+        <Block html={event.target} />
+      );
+    });
+
     (async () => {
-      const { data } = await axios.get("https://www.naver.com");
+      const url = getCookie("urlAddress") || urlAddress;
+
+      const { data } = await axios.get(url);
+
+      dispatch(setUrlAddress(url));
+
+      if (getCookie("urlAddress")) {
+        deleteCookie("urlAddress");
+      }
 
       setIframeDom(data);
     })();
@@ -165,15 +194,15 @@ const WebWindow = () => {
         }}
       >
         <input
-          defaultValue="https://www.naver.com"
+          defaultValue={getCookie("urlAddress") || urlAddress}
           onChange={(event) => {
-            setUrlInput(event.target.value);
+            dispatch(setUrlAddress(event.target.value));
           }}
         />
         <span
           className="material-symbols-outlined WebWindow-changeUrlButton"
           onClick={async () => {
-            const { data } = await axios.get(urlInput);
+            const { data } = await axios.get(urlAddress);
 
             setIframeDom(data);
           }}

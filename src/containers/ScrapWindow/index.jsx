@@ -12,7 +12,13 @@ const ScrapWindowContainer = styled.div`
   border-radius: 3px;
 
   .contentBox {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    padding: 100px;
     width: 100%;
+    overflow-y: scroll;
   }
 
   .resizer-r {
@@ -50,8 +56,8 @@ const ScrapWindow = () => {
   const [isFullScreen, setIsFullScreen] = useState(false);
 
   useEffect(() => {
-    const resizableEle = ref.current;
-    const styles = window.getComputedStyle(resizableEle);
+    const resizableElement = ref.current;
+    const styles = window.getComputedStyle(resizableElement);
     const webWindow = document.getElementById("webWindow");
 
     let width = parseInt(styles.width, 10);
@@ -59,9 +65,10 @@ const ScrapWindow = () => {
 
     const onMouseMoveRightResize = (event) => {
       const dx = event.clientX - x;
+
       x = event.clientX;
       width = width + dx;
-      resizableEle.style.width = `${width}px`;
+      resizableElement.style.width = `${width}px`;
       webWindow.style.width = `calc((100vw - 70px) - ${width}px)`;
     };
 
@@ -71,8 +78,8 @@ const ScrapWindow = () => {
 
     const onMouseDownRightResize = (event) => {
       x = event.clientX;
-      resizableEle.style.left = styles.left;
-      resizableEle.style.right = null;
+      resizableElement.style.left = styles.left;
+      resizableElement.style.right = null;
 
       document.addEventListener("mousemove", onMouseMoveRightResize);
       document.addEventListener("mouseup", onMouseUpRightResize);
@@ -88,7 +95,7 @@ const ScrapWindow = () => {
 
   return (
     <ScrapWindowContainer ref={ref} className="resizable">
-      <div className="contentBox"></div>
+      <div id="scrapWindowContentBox" className="contentBox"></div>
       <div ref={refRight} className="resizer-r"></div>
       <div
         className="ScrapWindow-fullscreen"
