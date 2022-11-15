@@ -24,9 +24,22 @@ const ScrapWindowContainer = styled.div`
 
   .ScrapWindow-fullscreen {
     position: absolute;
-    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    bottom: 10px;
+    left: 83px;
     user-select: none;
     cursor: pointer;
+
+    span {
+      font-size: 30px;
+      transition: all 0.4s ease-in-out;
+
+      :hover {
+        font-size: 35px;
+      }
+    }
   }
 `;
 
