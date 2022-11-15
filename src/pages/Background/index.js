@@ -1,5 +1,5 @@
-import '../../assets/img/icon-34.png';
-import '../../assets/img/icon-128.png';
+import "../../assets/img/icon-34.png";
+import "../../assets/img/icon-128.png";
 
 const HEADERS_TO_STRIP_LOWERCASE = [
   "content-security-policy",

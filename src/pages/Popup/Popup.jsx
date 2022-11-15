@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
+import setCookie from "../../../utils/setCookie";
 
 const PopupContainer = styled.div`
   position: absolute;
@@ -60,6 +61,17 @@ const PopupContainer = styled.div`
 `;
 
 const Popup = () => {
+  useEffect(() => {
+    chrome.tabs.query(
+      { active: true, lastFocusedWindow: true },
+      function (tabs) {
+        const url = tabs[0].url;
+
+        setCookie("urlAddress", url, 1);
+      }
+    );
+  }, []);
+
   return (
     <PopupContainer>
       <header className="Popup-header">

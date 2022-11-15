@@ -1,8 +1,14 @@
 import axios from "axios";
-import React from "react";
+import React, { useRef } from "react";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import deleteCookie from "../../../utils/deleteCookie";
+import getCookie from "../../../utils/getCookie";
 import COLORS from "../../constants/COLORS";
+import { addBlocks } from "../../redux/reducers/blocks";
+import { setUrlAddress } from "../../redux/reducers/urlAddress";
+import Block from "../Block";
 
 const WebWindowContainer = styled.div`
   display: flex;
@@ -123,7 +129,8 @@ const WebWindowContainer = styled.div`
   }
 
   .selectedDom {
-    border: 2px solid red;
+    border: 2px solid #ff6767;
+    border-radius: 2px;
   }
 `;
 
@@ -134,12 +141,25 @@ const BodyContainer = styled.div`
 `;
 
 const WebWindow = () => {
-  const [urlInput, setUrlInput] = useState("");
+  const blockRef = useRef(null);
+  const webWindowRef = useRef(null);
+
+  const { urlAddress } = useSelector(({ urlAddress }) => urlAddress);
+
   const [iframeDom, setIframeDom] = useState(null);
+  const [selectedBlock, setSelectedBlock] = useState(null);
   const [isAddressBarFold, setIsAddressBarFold] = useState(true);
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    const webWindow = document.getElementById("webWindowContent");
+    const webWindow = webWindowRef.current;
+    const block = blockRef.current;
+
+    let isDrag = false;
+    let selectedElement;
+    let positionX = 0;
+    let positionY = 0;
 
     webWindow.addEventListener("mouseover", (event) => {
       event.target.classList.add("selectedDom");
@@ -149,15 +169,63 @@ const WebWindow = () => {
       event.target.classList.remove("selectedDom");
     });
 
+    webWindow.addEventListener("mousedown", (event) => {
+      isDrag = true;
+      block.style.display = "flex";
+      selectedElement = event.target;
+
+      setSelectedBlock(selectedElement.outerHTML);
+
+      positionY = event.target.offsetTop;
+      positionX = event.target.offsetLeft;
+      block.style.top = `${positionY}px`;
+      block.style.left = `${positionX}px`;
+    });
+
+    window.addEventListener("mousemove", (event) => {
+      if (!isDrag) return;
+
+      block.style.top = `${event.clientY}px`;
+      block.style.left = `${event.clientX}px`;
+    });
+
+    window.addEventListener("mouseup", (event) => {
+      if (!isDrag) return;
+
+      isDrag = false;
+      block.style.top = `${event.clientY}px`;
+      block.style.left = `${event.clientX}px`;
+
+      if (webWindow.offsetLeft > event.clientX) {
+        dispatch(addBlocks(selectedElement.outerHTML));
+      }
+
+      block.style.display = "none";
+    });
+
     (async () => {
-      const { data } = await axios.get("https://www.naver.com");
+      const url = getCookie("urlAddress") || urlAddress;
+
+      const { data } = await axios.get(url);
+
+      dispatch(setUrlAddress(url));
+
+      if (getCookie("urlAddress")) {
+        deleteCookie("urlAddress");
+      }
 
       setIframeDom(data);
     })();
   }, []);
 
   return (
-    <WebWindowContainer id="webWindow">
+    <WebWindowContainer id="webWindow" ref={webWindowRef}>
+      <div
+        id="selectedBlock"
+        ref={blockRef}
+        style={{ position: "absolute" }}
+        dangerouslySetInnerHTML={{ __html: selectedBlock }}
+      />
       <div
         className="WebWindow-addressBarBox"
         style={{
@@ -165,15 +233,19 @@ const WebWindow = () => {
         }}
       >
         <input
-          defaultValue="https://www.naver.com"
+          defaultValue={
+            getCookie("urlAddress") ||
+            urlAddress ||
+            "https://eye-catch-danke-foresight.w3spaces.com"
+          }
           onChange={(event) => {
-            setUrlInput(event.target.value);
+            dispatch(setUrlAddress(event.target.value));
           }}
         />
         <span
           className="material-symbols-outlined WebWindow-changeUrlButton"
           onClick={async () => {
-            const { data } = await axios.get(urlInput);
+            const { data } = await axios.get(urlAddress);
 
             setIframeDom(data);
           }}

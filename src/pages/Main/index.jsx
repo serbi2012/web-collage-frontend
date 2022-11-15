@@ -1,5 +1,7 @@
 import React from "react";
 import { render } from "react-dom";
+import { Provider } from "react-redux";
+import store from "../../redux/configureStore";
 import styled from "styled-components";
 import Sidebar from "../../containers/Sidebar";
 import ScrapWindow from "../../containers/ScrapWindow";
@@ -12,11 +14,13 @@ const MainContainer = styled.div`
 
 const Main = () => {
   return (
-    <MainContainer>
-      <Sidebar />
-      <ScrapWindow />
-      <WebWindow />
-    </MainContainer>
+    <Provider store={store}>
+      <MainContainer>
+        <Sidebar />
+        <ScrapWindow />
+        <WebWindow />
+      </MainContainer>
+    </Provider>
   );
 };
 
