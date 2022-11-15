@@ -1,14 +1,7 @@
 import React from "react";
-import styled from "styled-components";
-
-const BlockContainer = styled.div``;
 
 const Block = ({ html }) => {
-  return (
-    <BlockContainer>
-      <div dangerouslySetInnerHTML={{ __html: html }} />
-    </BlockContainer>
-  );
+  return <div dangerouslySetInnerHTML={{ __html: html }} />;
 };
 
 export default Block;

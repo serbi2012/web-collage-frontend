@@ -6,6 +6,7 @@ import styled from "styled-components";
 import deleteCookie from "../../../utils/deleteCookie";
 import getCookie from "../../../utils/getCookie";
 import COLORS from "../../constants/COLORS";
+import { addBlocks } from "../../redux/reducers/blocks";
 import { setUrlAddress } from "../../redux/reducers/urlAddress";
 import Block from "../Block";
 
@@ -149,9 +150,6 @@ const WebWindow = () => {
 
   useEffect(() => {
     const webWindow = document.getElementById("webWindowContent");
-    const scrapWindowContentBox = document.getElementById(
-      "scrapWindowContentBox"
-    );
 
     webWindow.addEventListener("mouseover", (event) => {
       event.target.classList.add("selectedDom");
@@ -164,10 +162,7 @@ const WebWindow = () => {
     webWindow.addEventListener("mousedown", (event) => {
       const selectedElement = event.target;
 
-      scrapWindowContentBox.insertAdjacentElement(
-        "beforeend",
-        <Block html={event.target} />
-      );
+      dispatch(addBlocks(selectedElement.outerHTML));
     });
 
     (async () => {
@@ -194,7 +189,11 @@ const WebWindow = () => {
         }}
       >
         <input
-          defaultValue={getCookie("urlAddress") || urlAddress}
+          defaultValue={
+            getCookie("urlAddress") ||
+            urlAddress ||
+            "https://eye-catch-danke-foresight.w3spaces.com"
+          }
           onChange={(event) => {
             dispatch(setUrlAddress(event.target.value));
           }}

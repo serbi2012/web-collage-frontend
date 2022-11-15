@@ -2,8 +2,10 @@ import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useRef } from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 import COLORS from "../../constants/COLORS";
+import Block from "../Block";
 
 const ScrapWindowContainer = styled.div`
   display: flex;
@@ -53,6 +55,8 @@ const ScrapWindow = () => {
   const ref = useRef(null);
   const refRight = useRef(null);
 
+  const { blocks } = useSelector(({ blocks }) => blocks);
+
   const [isFullScreen, setIsFullScreen] = useState(false);
 
   useEffect(() => {
@@ -95,7 +99,11 @@ const ScrapWindow = () => {
 
   return (
     <ScrapWindowContainer ref={ref} className="resizable">
-      <div id="scrapWindowContentBox" className="contentBox"></div>
+      <div id="scrapWindowContentBox" className="contentBox">
+        {blocks.map((value, index) => {
+          return <Block html={value} key={index} />;
+        })}
+      </div>
       <div ref={refRight} className="resizer-r"></div>
       <div
         className="ScrapWindow-fullscreen"
