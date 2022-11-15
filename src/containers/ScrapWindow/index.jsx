@@ -83,19 +83,19 @@ const ScrapWindow = () => {
           const webWindow = document.getElementById("webWindow");
 
           if (isFullScreen) {
-            webWindow.style.display = "none";
-            ref.current.style.width = `calc((100vw - 70px)`;
-            webWindow.style.width = `0px`;
-          } else {
             webWindow.style.display = "flex";
             ref.current.style.width = `calc((100vw - 70px) / 2)`;
             webWindow.style.width = `calc((100vw - 70px) / 2)`;
+          } else {
+            webWindow.style.display = "none";
+            ref.current.style.width = `calc((100vw - 70px)`;
+            webWindow.style.width = `0px`;
           }
 
           setIsFullScreen(!isFullScreen);
         }}
       >
-        <span class="material-symbols-outlined">fullscreen</span>
+        <span className="material-symbols-outlined">fullscreen</span>
       </div>
     </ScrapWindowContainer>
   );
