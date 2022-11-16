@@ -67,6 +67,7 @@ const ScrapWindow = () => {
     ({ selectModeOption }) => selectModeOption
   );
 
+  const [selectedBlock, setSelectedBlock] = useState(null);
   const [isFullScreen, setIsFullScreen] = useState(false);
 
   useEffect(() => {
@@ -80,16 +81,20 @@ const ScrapWindow = () => {
     const webWindow = document.getElementById("webWindow");
     const scrapWindow = document.getElementById("scrapWindowContentBox");
 
-    let width = parseInt(styles.width, 10);
-    let x = 0;
+    let isDrag = false;
+    let selectedElement;
+    let elementX = 0;
+    let elementY = 0;
+    let windowWidth = parseInt(styles.width, 10);
+    let windowX = 0;
 
     const onMouseMoveRightResize = (event) => {
-      const dx = event.clientX - x;
+      const dx = event.clientX - windowX;
 
-      x = event.clientX;
-      width = width + dx;
-      resizableElement.style.width = `${width}px`;
-      webWindow.style.width = `calc((100vw - 70px) - ${width}px)`;
+      windowX = event.clientX;
+      windowWidth = windowWidth + dx;
+      resizableElement.style.width = `${windowWidth}px`;
+      webWindow.style.width = `calc((100vw - 70px) - ${windowWidth}px)`;
     };
 
     const onMouseUpRightResize = () => {
@@ -97,7 +102,7 @@ const ScrapWindow = () => {
     };
 
     const onMouseDownRightResize = (event) => {
-      x = event.clientX;
+      windowX = event.clientX;
       resizableElement.style.left = styles.left;
       resizableElement.style.right = null;
 
@@ -106,20 +111,48 @@ const ScrapWindow = () => {
     };
 
     const scrapWindowContentMouseover = (event) => {
-      if (selectModeOptionRef.current !== "BoxAndBlockMode") return;
-
       event.target.classList.add("selectedDom");
     };
 
     const scrapWindowContentMouseout = (event) => {
-      if (selectModeOptionRef.current !== "BoxAndBlockMode") return;
-
       event.target.classList.remove("selectedDom");
+    };
+
+    const scrapWindowMousedown = (event) => {
+      if (selectModeOptionRef.current === "BoxAndBlockMode") return;
+
+      isDrag = true;
+      selectedElement = event.target;
+      selectedElement.style.position = "absolute";
+      positionY = event.target.offsetTop;
+      positionX = event.target.offsetLeft;
+      selectedElement.style.top = `${positionY}px`;
+      selectedElement.style.left = `${positionX}px`;
+    };
+
+    const scrapWindowMousemove = (event) => {
+      if (selectModeOptionRef.current === "BoxAndBlockMode") return;
+      if (!isDrag) return;
+
+      selectedElement.style.top = `${event.clientY}px`;
+      selectedElement.style.left = `${event.clientX}px`;
+    };
+
+    const scrapWindowMouseup = (event) => {
+      if (selectModeOptionRef.current === "BoxAndBlockMode") return;
+      if (!isDrag) return;
+
+      isDrag = false;
+      selectedElement.style.top = `${event.clientY}px`;
+      selectedElement.style.left = `${event.clientX}px`;
     };
 
     resizerRight.addEventListener("mousedown", onMouseDownRightResize);
     scrapWindow.addEventListener("mouseover", scrapWindowContentMouseover);
     scrapWindow.addEventListener("mouseout", scrapWindowContentMouseout);
+    scrapWindow.addEventListener("mousedown", scrapWindowMousedown);
+    scrapWindow.addEventListener("mousemove", scrapWindowMousemove);
+    scrapWindow.addEventListener("mouseup", scrapWindowMouseup);
   }, []);
 
   return (
@@ -143,11 +176,11 @@ const ScrapWindow = () => {
 
           if (isFullScreen) {
             webWindow.style.display = "flex";
-            ref.current.style.width = `calc((100vw - 70px) / 2)`;
+            resizableElementRef.current.style.width = `calc((100vw - 70px) / 2)`;
             webWindow.style.width = `calc((100vw - 70px) / 2)`;
           } else {
             webWindow.style.display = "none";
-            ref.current.style.width = `calc((100vw - 70px)`;
+            resizableElementRef.current.style.width = `calc((100vw - 70px)`;
             webWindow.style.width = `0px`;
           }
 
