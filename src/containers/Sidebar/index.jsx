@@ -1,9 +1,10 @@
 import React from "react";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import COLORS from "../../constants/COLORS";
 import SIDEBAR_TOOLS from "../../constants/SIDEBAR_TOOLS";
+import { toggleModalOpen } from "../../redux/reducers/selectedSidebarTool";
 import { changeSelectModeOption } from "../../redux/reducers/selectModeOption";
 import SidebarFoldButton from "../SidebarFoldButton";
 import SidebarModal from "../SidebarModal";
@@ -48,6 +49,10 @@ const SidebarContainer = styled.div`
 
 const Sidebar = () => {
   const [isFold, setIsFold] = useState(false);
+
+  const { isSidebarModalOpen } = useSelector(
+    ({ selectedSidebarTool }) => selectedSidebarTool
+  );
 
   const dispatch = useDispatch();
 

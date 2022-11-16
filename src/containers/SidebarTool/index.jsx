@@ -2,7 +2,10 @@ import React from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import COLORS from "../../constants/COLORS";
-import { selectSidebarTool } from "../../redux/reducers/selectedSidebarTool";
+import {
+  selectSidebarTool,
+  toggleModalOpen,
+} from "../../redux/reducers/selectedSidebarTool";
 
 const SidebarToolContainer = styled.div`
   display: flex;
@@ -29,7 +32,7 @@ const SidebarToolContainer = styled.div`
 `;
 
 const SidebarTool = ({ icon, mode }) => {
-  const { selectedSidebarTool } = useSelector(
+  const { selectedSidebarTool, isSidebarModalOpen } = useSelector(
     ({ selectedSidebarTool }) => selectedSidebarTool
   );
 
@@ -39,7 +42,11 @@ const SidebarTool = ({ icon, mode }) => {
     <SidebarToolContainer
       className={selectedSidebarTool === mode && "Sidebar-selectedTool"}
       onClick={() => {
-        dispatch(selectSidebarTool(mode));
+        if (selectedSidebarTool !== mode) {
+          dispatch(selectSidebarTool(mode));
+        }
+
+        dispatch(toggleModalOpen(!isSidebarModalOpen));
       }}
     >
       <span className="material-symbols-outlined">{icon}</span>

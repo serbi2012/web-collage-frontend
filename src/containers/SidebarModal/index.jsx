@@ -19,13 +19,17 @@ const SidebarModalContainer = styled.div`
 `;
 
 const SidebarModal = ({ content }) => {
-  const { selectedSidebarTool } = useSelector(
+  const { selectedSidebarTool, isSidebarModalOpen } = useSelector(
     ({ selectedSidebarTool }) => selectedSidebarTool
   );
 
   return (
     <SidebarModalContainer
-      style={{ display: selectedSidebarTool !== "selectMode" && "none" }}
+      style={{
+        display:
+          (selectedSidebarTool !== "selectMode" || !isSidebarModalOpen) &&
+          "none",
+      }}
     >
       {content}
     </SidebarModalContainer>
