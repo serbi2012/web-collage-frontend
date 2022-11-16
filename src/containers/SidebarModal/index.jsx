@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 import COLORS from "../../constants/COLORS";
 
@@ -18,7 +19,17 @@ const SidebarModalContainer = styled.div`
 `;
 
 const SidebarModal = ({ content }) => {
-  return <SidebarModalContainer>{content}</SidebarModalContainer>;
+  const { selectedSidebarTool } = useSelector(
+    ({ selectedSidebarTool }) => selectedSidebarTool
+  );
+
+  return (
+    <SidebarModalContainer
+      style={{ display: selectedSidebarTool !== "selectMode" && "none" }}
+    >
+      {content}
+    </SidebarModalContainer>
+  );
 };
 
 export default SidebarModal;

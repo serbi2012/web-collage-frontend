@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import COLORS from "../../constants/COLORS";
+import { selectSidebarTool } from "../../redux/reducers/selectedSidebarTool";
 
 const SidebarToolContainer = styled.div`
   display: flex;
@@ -25,11 +26,6 @@ const SidebarToolContainer = styled.div`
   span {
     font-size: 30px;
   }
-
-  .Sidebar-selectedTool {
-    color: ${COLORS.MAIN_COLOR};
-    background-color: ${COLORS.SUB_COLOR};
-  }
 `;
 
 const SidebarTool = ({ icon, mode }) => {
@@ -41,7 +37,7 @@ const SidebarTool = ({ icon, mode }) => {
 
   return (
     <SidebarToolContainer
-      className={`${selectedSidebarTool === mode && "Sidebar-selectedTool"}`}
+      className={selectedSidebarTool === mode && "Sidebar-selectedTool"}
       onClick={() => {
         dispatch(selectSidebarTool(mode));
       }}

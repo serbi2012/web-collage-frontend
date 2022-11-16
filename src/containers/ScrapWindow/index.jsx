@@ -50,20 +50,35 @@ const ScrapWindowContainer = styled.div`
       }
     }
   }
+
+  .selectedDom {
+    border: 2px solid #ff6767;
+    border-radius: 2px;
+  }
 `;
 
 const ScrapWindow = () => {
-  const ref = useRef(null);
-  const refRight = useRef(null);
+  const resizableElementRef = useRef(null);
+  const rightResizerRef = useRef(null);
+  const selectModeOptionRef = useRef(null);
 
   const { blocks } = useSelector(({ blocks }) => blocks);
+  const { selectModeOption } = useSelector(
+    ({ selectModeOption }) => selectModeOption
+  );
 
   const [isFullScreen, setIsFullScreen] = useState(false);
 
   useEffect(() => {
-    const resizableElement = ref.current;
+    selectModeOptionRef.current = selectModeOption;
+  }, [selectModeOption]);
+
+  useEffect(() => {
+    const resizableElement = resizableElementRef.current;
+    const resizerRight = rightResizerRef.current;
     const styles = window.getComputedStyle(resizableElement);
     const webWindow = document.getElementById("webWindow");
+    const scrapWindow = document.getElementById("scrapWindowContentBox");
 
     let width = parseInt(styles.width, 10);
     let x = 0;
@@ -90,16 +105,25 @@ const ScrapWindow = () => {
       document.addEventListener("mouseup", onMouseUpRightResize);
     };
 
-    const resizerRight = refRight.current;
-    resizerRight.addEventListener("mousedown", onMouseDownRightResize);
+    const scrapWindowContentMouseover = (event) => {
+      if (selectModeOptionRef.current !== "BoxAndBlockMode") return;
 
-    return () => {
-      resizerRight.removeEventListener("mousedown", onMouseDownRightResize);
+      event.target.classList.add("selectedDom");
     };
+
+    const scrapWindowContentMouseout = (event) => {
+      if (selectModeOptionRef.current !== "BoxAndBlockMode") return;
+
+      event.target.classList.remove("selectedDom");
+    };
+
+    resizerRight.addEventListener("mousedown", onMouseDownRightResize);
+    scrapWindow.addEventListener("mouseover", scrapWindowContentMouseover);
+    scrapWindow.addEventListener("mouseout", scrapWindowContentMouseout);
   }, []);
 
   return (
-    <ScrapWindowContainer ref={ref} className="resizable">
+    <ScrapWindowContainer ref={resizableElementRef} className="resizable">
       <div id="scrapWindowContentBox" className="contentBox">
         <Box
           content={[
@@ -111,7 +135,7 @@ const ScrapWindow = () => {
           ]}
         />
       </div>
-      <div ref={refRight} className="resizer-r"></div>
+      <div ref={rightResizerRef} className="resizer-r"></div>
       <div
         className="ScrapWindow-fullscreen"
         onClick={() => {
