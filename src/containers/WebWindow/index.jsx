@@ -8,7 +8,7 @@ import getCookie from "../../../utils/getCookie";
 import COLORS from "../../constants/COLORS";
 import { addBlocks } from "../../redux/reducers/blocks";
 import { setUrlAddress } from "../../redux/reducers/urlAddress";
-import Block from "../Block";
+import AddressBarBox from "../AddressBar";
 
 const WebWindowContainer = styled.div`
   display: flex;
@@ -18,87 +18,14 @@ const WebWindowContainer = styled.div`
   height: 100vh;
   width: calc((100vw - 70px) / 2);
   overflow-y: scroll;
-
-  .WebWindow-addressBarBox {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    padding: 5px 5px;
-    width: 250px;
-    top: 20px;
-    background-color: ${COLORS.SUB_COLOR};
-    border-radius: 5px;
-    box-shadow: 1px 2px 3px 0px rgba(0, 0, 0, 0.2);
-    transition: all 0.4s ease-in-out;
-    z-index: 2000000;
-
-    input {
-      padding: 5px 10px;
-      width: 250px;
-      border-radius: 5px;
-
-      :focus {
-        outline: none;
-      }
-    }
-
-    .WebWindow-changeUrlButton {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-left: 5px;
-      height: 30px;
-      width: 40px;
-      color: ${COLORS.SUB_COLOR};
-      background-color: ${COLORS.MAIN_COLOR};
-      border-radius: 5px;
-      transition: all 0.2s ease-in-out;
-      user-select: none;
-      cursor: pointer;
-
-      :hover {
-        opacity: 0.9;
-      }
-
-      :active {
-        opacity: 0.7;
-      }
-    }
-
-    .WebWindow-foldButton {
-      position: absolute;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      background-color: ${COLORS.SUB_COLOR};
-      height: 50px;
-      width: 50px;
-      color: ${COLORS.MAIN_COLOR};
-      border-radius: 50px;
-      box-shadow: 1px 2px 3px 0px rgba(0, 0, 0, 0.2);
-      user-select: none;
-      cursor: pointer;
-      transition: all 0.4s ease-in-out;
-      z-index: -1;
-
-      :hover {
-        opacity: 0.9;
-      }
-
-      :active {
-        opacity: 0.7;
-      }
-    }
-  }
+  user-select: none;
 
   .WebWindow-ratioButton {
     position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
-    right: 10px;
+    right: 15px;
     bottom: 10px;
     width: 130px;
     height: 40px;
@@ -122,10 +49,39 @@ const WebWindowContainer = styled.div`
     }
   }
 
-  iframe {
-    height: 100%;
-    width: 100%;
-    border: none;
+  .WebWindow-scrapModeButton {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    bottom: 55px;
+    right: 15px;
+    height: 35px;
+    width: 35px;
+    background-color: ${COLORS.SUB_COLOR};
+    border-radius: 5px;
+    box-shadow: 1px 2px 3px 0px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease-in-out;
+    user-select: none;
+    cursor: pointer;
+    z-index: 2000000;
+
+    :hover {
+      color: ${COLORS.SUB_COLOR};
+      background-color: ${COLORS.MAIN_COLOR};
+      opacity: 0.7;
+    }
+
+    :active {
+      color: ${COLORS.SUB_COLOR};
+      background-color: ${COLORS.MAIN_COLOR};
+      opacity: 0.5;
+    }
+  }
+
+  .WebWindow-scrapMode {
+    color: ${COLORS.SUB_COLOR};
+    background-color: ${COLORS.MAIN_COLOR};
   }
 
   .selectedDom {
@@ -143,33 +99,46 @@ const BodyContainer = styled.div`
 const WebWindow = () => {
   const blockRef = useRef(null);
   const webWindowRef = useRef(null);
+  const isScrapModeRef = useRef(false);
 
   const { urlAddress } = useSelector(({ urlAddress }) => urlAddress);
 
   const [iframeDom, setIframeDom] = useState(null);
   const [selectedBlock, setSelectedBlock] = useState(null);
   const [isAddressBarFold, setIsAddressBarFold] = useState(true);
+  const [isScrapMode, setIsScrapMode] = useState(false);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
+    isScrapModeRef.current = isScrapMode;
+  }, [isScrapMode]);
+
+  useEffect(() => {
     const webWindow = webWindowRef.current;
     const block = blockRef.current;
+    const webWindowContent = document.getElementById("webWindowContent");
 
     let isDrag = false;
     let selectedElement;
     let positionX = 0;
     let positionY = 0;
 
-    webWindow.addEventListener("mouseover", (event) => {
+    const webWindowContentMouseover = (event) => {
+      if (!isScrapModeRef.current) return;
+
       event.target.classList.add("selectedDom");
-    });
+    };
 
-    webWindow.addEventListener("mouseout", (event) => {
+    const webWindowContentMouseout = (event) => {
+      if (!isScrapModeRef.current) return;
+
       event.target.classList.remove("selectedDom");
-    });
+    };
 
-    webWindow.addEventListener("mousedown", (event) => {
+    const webWindowMousedown = (event) => {
+      if (!isScrapModeRef.current) return;
+
       isDrag = true;
       block.style.display = "flex";
       selectedElement = event.target;
@@ -180,16 +149,18 @@ const WebWindow = () => {
       positionX = event.target.offsetLeft;
       block.style.top = `${positionY}px`;
       block.style.left = `${positionX}px`;
-    });
+    };
 
-    window.addEventListener("mousemove", (event) => {
+    const windowMousemove = (event) => {
+      if (!isScrapModeRef.current) return;
       if (!isDrag) return;
 
       block.style.top = `${event.clientY}px`;
       block.style.left = `${event.clientX}px`;
-    });
+    };
 
-    window.addEventListener("mouseup", (event) => {
+    const windowMouseup = (event) => {
+      if (!isScrapModeRef.current) return;
       if (!isDrag) return;
 
       isDrag = false;
@@ -201,10 +172,19 @@ const WebWindow = () => {
       }
 
       block.style.display = "none";
-    });
+    };
+
+    webWindowContent.addEventListener("mouseover", webWindowContentMouseover);
+    webWindowContent.addEventListener("mouseout", webWindowContentMouseout);
+    webWindow.addEventListener("mousedown", webWindowMousedown);
+    window.addEventListener("mousemove", windowMousemove);
+    window.addEventListener("mouseup", windowMouseup);
 
     (async () => {
-      const url = getCookie("urlAddress") || urlAddress;
+      const url =
+        getCookie("urlAddress") ||
+        urlAddress ||
+        "https://illuminating-extol-innovation.w3spaces.com/";
 
       const { data } = await axios.get(url);
 
@@ -226,46 +206,20 @@ const WebWindow = () => {
         style={{ position: "absolute" }}
         dangerouslySetInnerHTML={{ __html: selectedBlock }}
       />
+      <AddressBarBox
+        isAddressBarFold={isAddressBarFold}
+        setIsAddressBarFold={setIsAddressBarFold}
+        setIframeDom={setIframeDom}
+      />
       <div
-        className="WebWindow-addressBarBox"
-        style={{
-          transform: isAddressBarFold ? "translateY(-70px)" : "translateY(0px)",
+        className={`WebWindow-scrapModeButton ${
+          isScrapMode && "WebWindow-scrapMode"
+        }`}
+        onClick={() => {
+          setIsScrapMode(!isScrapMode);
         }}
       >
-        <input
-          defaultValue={
-            getCookie("urlAddress") ||
-            urlAddress ||
-            "https://eye-catch-danke-foresight.w3spaces.com"
-          }
-          onChange={(event) => {
-            dispatch(setUrlAddress(event.target.value));
-          }}
-        />
-        <span
-          className="material-symbols-outlined WebWindow-changeUrlButton"
-          onClick={async () => {
-            const { data } = await axios.get(urlAddress);
-
-            setIframeDom(data);
-          }}
-        >
-          arrow_forward
-        </span>
-        <div
-          className="WebWindow-foldButton"
-          onClick={() => {
-            setIsAddressBarFold(!isAddressBarFold);
-          }}
-          style={{
-            transform: isAddressBarFold
-              ? "translateY(25px)"
-              : "translateY(-15px)",
-          }}
-        >
-          <span className="material-symbols-outlined">arrow_drop_up</span>
-          <span className="material-symbols-outlined">arrow_drop_down</span>
-        </div>
+        <span className="material-symbols-outlined">file_copy</span>
       </div>
       <div className="WebWindow-ratioButton">
         <span>-</span>
