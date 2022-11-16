@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 import COLORS from "../../constants/COLORS";
 import Block from "../Block";
+import Box from "../Box";
 
 const ScrapWindowContainer = styled.div`
   display: flex;
@@ -100,9 +101,15 @@ const ScrapWindow = () => {
   return (
     <ScrapWindowContainer ref={ref} className="resizable">
       <div id="scrapWindowContentBox" className="contentBox">
-        {blocks.map((value, index) => {
-          return <Block html={value} key={index} />;
-        })}
+        <Box
+          content={[
+            <div>
+              {blocks.map((value, index) => {
+                return <Block html={value} key={index} />;
+              })}
+            </div>,
+          ]}
+        />
       </div>
       <div ref={refRight} className="resizer-r"></div>
       <div

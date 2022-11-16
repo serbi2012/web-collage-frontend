@@ -8,10 +8,11 @@ const BoxContainer = styled.div`
   flex-direction: column;
   padding: 10px;
   width: 500px;
+  border: 2px solid #ccc;
 `;
 
-const Box = () => {
-  return <BoxContainer></BoxContainer>;
+const Box = ({ content }) => {
+  return <BoxContainer>{content}</BoxContainer>;
 };
 
 export default Box;

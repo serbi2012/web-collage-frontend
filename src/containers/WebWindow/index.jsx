@@ -8,7 +8,6 @@ import getCookie from "../../../utils/getCookie";
 import COLORS from "../../constants/COLORS";
 import { addBlocks } from "../../redux/reducers/blocks";
 import { setUrlAddress } from "../../redux/reducers/urlAddress";
-import Block from "../Block";
 
 const WebWindowContainer = styled.div`
   display: flex;
@@ -18,6 +17,7 @@ const WebWindowContainer = styled.div`
   height: 100vh;
   width: calc((100vw - 70px) / 2);
   overflow-y: scroll;
+  user-select: none;
 
   .WebWindow-addressBarBox {
     display: flex;
@@ -98,7 +98,7 @@ const WebWindowContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    right: 10px;
+    right: 15px;
     bottom: 10px;
     width: 130px;
     height: 40px;
@@ -122,10 +122,30 @@ const WebWindowContainer = styled.div`
     }
   }
 
-  iframe {
-    height: 100%;
-    width: 100%;
-    border: none;
+  .WebWindow-scrapModeButton {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    bottom: 55px;
+    right: 15px;
+    height: 35px;
+    width: 35px;
+    background-color: ${COLORS.SUB_COLOR};
+    border-radius: 5px;
+    box-shadow: 1px 2px 3px 0px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease-in-out;
+    user-select: none;
+    cursor: pointer;
+    z-index: 2000000;
+
+    :hover {
+      opacity: 0.9;
+    }
+
+    :active {
+      opacity: 0.7;
+    }
   }
 
   .selectedDom {
@@ -143,6 +163,7 @@ const BodyContainer = styled.div`
 const WebWindow = () => {
   const blockRef = useRef(null);
   const webWindowRef = useRef(null);
+  const isScrapModeRef = useRef(true);
 
   const { urlAddress } = useSelector(({ urlAddress }) => urlAddress);
 
@@ -161,15 +182,25 @@ const WebWindow = () => {
     let positionX = 0;
     let positionY = 0;
 
-    webWindow.addEventListener("mouseover", (event) => {
-      event.target.classList.add("selectedDom");
-    });
+    document
+      .getElementById("webWindowContent")
+      .addEventListener("mouseover", (event) => {
+        if (!isScrapModeRef.current) return;
 
-    webWindow.addEventListener("mouseout", (event) => {
-      event.target.classList.remove("selectedDom");
-    });
+        event.target.classList.add("selectedDom");
+      });
+
+    document
+      .getElementById("webWindowContent")
+      .addEventListener("mouseout", (event) => {
+        if (!isScrapModeRef.current) return;
+
+        event.target.classList.remove("selectedDom");
+      });
 
     webWindow.addEventListener("mousedown", (event) => {
+      if (!isScrapModeRef.current) return;
+
       isDrag = true;
       block.style.display = "flex";
       selectedElement = event.target;
@@ -183,6 +214,7 @@ const WebWindow = () => {
     });
 
     window.addEventListener("mousemove", (event) => {
+      if (!isScrapModeRef.current) return;
       if (!isDrag) return;
 
       block.style.top = `${event.clientY}px`;
@@ -190,6 +222,7 @@ const WebWindow = () => {
     });
 
     window.addEventListener("mouseup", (event) => {
+      if (!isScrapModeRef.current) return;
       if (!isDrag) return;
 
       isDrag = false;
@@ -204,7 +237,10 @@ const WebWindow = () => {
     });
 
     (async () => {
-      const url = getCookie("urlAddress") || urlAddress;
+      const url =
+        getCookie("urlAddress") ||
+        urlAddress ||
+        "https://illuminating-extol-innovation.w3spaces.com/";
 
       const { data } = await axios.get(url);
 
@@ -266,6 +302,14 @@ const WebWindow = () => {
           <span className="material-symbols-outlined">arrow_drop_up</span>
           <span className="material-symbols-outlined">arrow_drop_down</span>
         </div>
+      </div>
+      <div
+        className="WebWindow-scrapModeButton"
+        onClick={() => {
+          isScrapModeRef.current = !isScrapModeRef.current;
+        }}
+      >
+        <span className="material-symbols-outlined">file_copy</span>
       </div>
       <div className="WebWindow-ratioButton">
         <span>-</span>
