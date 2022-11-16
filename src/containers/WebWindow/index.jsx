@@ -163,13 +163,43 @@ const WebWindow = () => {
       if (!isScrapModeRef.current) return;
       if (!isDrag) return;
 
+      const boxes = document.getElementsByClassName("BoxComponent");
+      const scrapWindow = document.getElementById("scrapWindowContentBox");
+      const copiedBox = boxes[0].cloneNode(false);
+
       isDrag = false;
       block.style.top = `${event.clientY}px`;
       block.style.left = `${event.clientX}px`;
 
-      if (webWindow.offsetLeft > event.clientX) {
-        dispatch(addBlocks(selectedElement.outerHTML));
+      for (let i = 0; i < boxes.length; i++) {
+        if (
+          boxes[i].getBoundingClientRect().top < event.clientY &&
+          boxes[i].getBoundingClientRect().bottom > event.clientY &&
+          boxes[i].getBoundingClientRect().left < event.clientX &&
+          boxes[i].getBoundingClientRect().right > event.clientX
+        ) {
+          selectedElement.style.position = "relative";
+          selectedElement.style.removeProperty("top");
+          selectedElement.style.removeProperty("left");
+          boxes[i].insertAdjacentElement(
+            "beforeend",
+            selectedElement.cloneNode(true)
+          );
+
+          block.style.display = "none";
+          return;
+        }
       }
+
+      selectedElement.style.position = "relative";
+      selectedElement.style.removeProperty("top");
+      selectedElement.style.removeProperty("left");
+      copiedBox.insertAdjacentElement(
+        "beforeend",
+        selectedElement.cloneNode(true)
+      );
+
+      scrapWindow.insertAdjacentElement("beforeend", copiedBox);
 
       block.style.display = "none";
     };

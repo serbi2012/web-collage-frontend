@@ -62,6 +62,7 @@ const Box = styled.div`
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
+  margin: 5px 0;
   padding: 10px;
   width: 500px;
   border: 2px solid #ccc;
@@ -77,7 +78,6 @@ const ScrapWindow = () => {
     ({ selectModeOption }) => selectModeOption
   );
 
-  const [selectedBlock, setSelectedBlock] = useState(null);
   const [isFullScreen, setIsFullScreen] = useState(false);
 
   useEffect(() => {
@@ -119,23 +119,26 @@ const ScrapWindow = () => {
     };
 
     const scrapWindowContentMouseover = (event) => {
+      if (event.target === scrapWindow) return;
+
       event.target.classList.add("selectedDom");
     };
 
     const scrapWindowContentMouseout = (event) => {
+      if (event.target === scrapWindow) return;
+
       event.target.classList.remove("selectedDom");
     };
 
     const scrapWindowMousedown = (event) => {
+      if (event.target === scrapWindow) return;
+
       isDrag = true;
       selectedElement = event.target;
 
       selectedElement.style.position = "absolute";
       selectedElement.style.top = `${event.target.offsetTop}px`;
       selectedElement.style.left = `${event.target.offsetLeft}px`;
-      if (selectModeOptionRef.current === "BoxAndBlockMode") {
-      } else {
-      }
     };
 
     const scrapWindowMousemove = (event) => {
@@ -143,17 +146,17 @@ const ScrapWindow = () => {
 
       selectedElement.style.top = `${event.clientY}px`;
       selectedElement.style.left = `${event.clientX}px`;
-      if (selectModeOptionRef.current === "BoxAndBlockMode") {
-      } else {
-      }
     };
 
     const scrapWindowMouseup = (event) => {
       if (!isDrag) return;
 
-      isDrag = false;
-
       const boxes = document.getElementsByClassName("BoxComponent");
+      const copiedBox = boxes[0].cloneNode(false);
+
+      isDrag = false;
+      selectedElement.style.top = `${event.clientY}px`;
+      selectedElement.style.left = `${event.clientX}px`;
 
       if (selectModeOptionRef.current === "BoxAndBlockMode") {
         for (let i = 0; i < boxes.length; i++) {
@@ -168,12 +171,15 @@ const ScrapWindow = () => {
             selectedElement.style.removeProperty("left");
             boxes[i].insertAdjacentElement("beforeend", selectedElement);
 
-            break;
+            return;
           }
         }
-      } else {
-        selectedElement.style.top = `${event.clientY}px`;
-        selectedElement.style.left = `${event.clientX}px`;
+
+        selectedElement.style.position = "relative";
+        selectedElement.style.removeProperty("top");
+        selectedElement.style.removeProperty("left");
+        copiedBox.insertAdjacentElement("beforeend", selectedElement);
+        scrapWindow.insertAdjacentElement("beforeend", copiedBox);
       }
     };
 
@@ -189,11 +195,7 @@ const ScrapWindow = () => {
     <ScrapWindowContainer ref={resizableElementRef} className="resizable">
       <div id="scrapWindowContentBox" className="contentBox">
         <Box className="BoxComponent"></Box>
-        <Box className="BoxComponent">
-          {blocks.map((value, index) => {
-            return <Block html={value} key={index} />;
-          })}
-        </Box>
+        <Box className="BoxComponent"></Box>
       </div>
       <div ref={rightResizerRef} className="resizer-r"></div>
       <div
