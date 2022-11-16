@@ -6,13 +6,13 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 import COLORS from "../../constants/COLORS";
 import Block from "../Block";
-import Box from "../Box";
 
 const ScrapWindowContainer = styled.div`
   display: flex;
   width: calc((100vw - 70px) / 2);
   height: 100vh;
   border-radius: 3px;
+  user-select: none;
 
   .contentBox {
     display: flex;
@@ -57,6 +57,16 @@ const ScrapWindowContainer = styled.div`
   }
 `;
 
+const Box = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  padding: 10px;
+  width: 500px;
+  border: 2px solid #ccc;
+`;
+
 const ScrapWindow = () => {
   const resizableElementRef = useRef(null);
   const rightResizerRef = useRef(null);
@@ -83,8 +93,6 @@ const ScrapWindow = () => {
 
     let isDrag = false;
     let selectedElement;
-    let elementX = 0;
-    let elementY = 0;
     let windowWidth = parseInt(styles.width, 10);
     let windowX = 0;
 
@@ -119,32 +127,54 @@ const ScrapWindow = () => {
     };
 
     const scrapWindowMousedown = (event) => {
-      if (selectModeOptionRef.current === "BoxAndBlockMode") return;
-
       isDrag = true;
       selectedElement = event.target;
+
       selectedElement.style.position = "absolute";
-      positionY = event.target.offsetTop;
-      positionX = event.target.offsetLeft;
-      selectedElement.style.top = `${positionY}px`;
-      selectedElement.style.left = `${positionX}px`;
+      selectedElement.style.top = `${event.target.offsetTop}px`;
+      selectedElement.style.left = `${event.target.offsetLeft}px`;
+      if (selectModeOptionRef.current === "BoxAndBlockMode") {
+      } else {
+      }
     };
 
     const scrapWindowMousemove = (event) => {
-      if (selectModeOptionRef.current === "BoxAndBlockMode") return;
       if (!isDrag) return;
 
       selectedElement.style.top = `${event.clientY}px`;
       selectedElement.style.left = `${event.clientX}px`;
+      if (selectModeOptionRef.current === "BoxAndBlockMode") {
+      } else {
+      }
     };
 
     const scrapWindowMouseup = (event) => {
-      if (selectModeOptionRef.current === "BoxAndBlockMode") return;
       if (!isDrag) return;
 
       isDrag = false;
-      selectedElement.style.top = `${event.clientY}px`;
-      selectedElement.style.left = `${event.clientX}px`;
+
+      const boxes = document.getElementsByClassName("BoxComponent");
+
+      if (selectModeOptionRef.current === "BoxAndBlockMode") {
+        for (let i = 0; i < boxes.length; i++) {
+          if (
+            boxes[i].getBoundingClientRect().top < event.clientY &&
+            boxes[i].getBoundingClientRect().bottom > event.clientY &&
+            boxes[i].getBoundingClientRect().left < event.clientX &&
+            boxes[i].getBoundingClientRect().right > event.clientX
+          ) {
+            selectedElement.style.position = "relative";
+            selectedElement.style.removeProperty("top");
+            selectedElement.style.removeProperty("left");
+            boxes[i].insertAdjacentElement("beforeend", selectedElement);
+
+            break;
+          }
+        }
+      } else {
+        selectedElement.style.top = `${event.clientY}px`;
+        selectedElement.style.left = `${event.clientX}px`;
+      }
     };
 
     resizerRight.addEventListener("mousedown", onMouseDownRightResize);
@@ -158,15 +188,12 @@ const ScrapWindow = () => {
   return (
     <ScrapWindowContainer ref={resizableElementRef} className="resizable">
       <div id="scrapWindowContentBox" className="contentBox">
-        <Box
-          content={[
-            <div>
-              {blocks.map((value, index) => {
-                return <Block html={value} key={index} />;
-              })}
-            </div>,
-          ]}
-        />
+        <Box className="BoxComponent"></Box>
+        <Box className="BoxComponent">
+          {blocks.map((value, index) => {
+            return <Block html={value} key={index} />;
+          })}
+        </Box>
       </div>
       <div ref={rightResizerRef} className="resizer-r"></div>
       <div
