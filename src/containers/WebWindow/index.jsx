@@ -120,8 +120,6 @@ const WebWindow = () => {
 
     let isDrag = false;
     let selectedElement;
-    let positionX = 0;
-    let positionY = 0;
 
     const webWindowContentMouseover = (event) => {
       if (!isScrapModeRef.current) return;
@@ -139,15 +137,14 @@ const WebWindow = () => {
       if (!isScrapModeRef.current) return;
 
       isDrag = true;
-      block.style.display = "flex";
       selectedElement = event.target;
+
+      block.style.display = "flex";
 
       setSelectedBlock(selectedElement.outerHTML);
 
-      positionY = event.target.getBoundingClientRect().top;
-      positionX = event.target.getBoundingClientRect().left;
-      block.style.top = `${positionY}px`;
-      block.style.left = `${positionX}px`;
+      block.style.top = `${event.clientY}px`;
+      block.style.left = `${event.clientX}px`;
     };
 
     const windowMousemove = (event) => {
@@ -167,6 +164,7 @@ const WebWindow = () => {
       const copiedBox = boxes[0].cloneNode(false);
 
       isDrag = false;
+
       block.style.top = `${event.clientY}px`;
       block.style.left = `${event.clientX}px`;
 

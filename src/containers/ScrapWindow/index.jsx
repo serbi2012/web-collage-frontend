@@ -141,17 +141,12 @@ const ScrapWindow = () => {
       if (event.target === scrapWindow) return;
 
       selectedElement = event.target;
+      isDrag = true;
 
       if (selectedSidebarToolRef.current === "selectMode") {
-        isDrag = true;
-
         selectedElement.style.position = "absolute";
-        selectedElement.style.top = `${
-          event.target.getBoundingClientRect().bottom
-        }px`;
-        selectedElement.style.left = `${
-          event.target.getBoundingClientRect().left
-        }px`;
+        selectedElement.style.top = `${event.clientY}px`;
+        selectedElement.style.left = `${event.clientX}px`;
       } else if (selectedSidebarToolRef.current === "editMode") {
       }
     };
@@ -162,13 +157,24 @@ const ScrapWindow = () => {
 
         selectedElement.style.top = `${event.clientY}px`;
         selectedElement.style.left = `${event.clientX}px`;
+      } else if (selectedSidebarToolRef.current === "editMode") {
+        if (
+          selectedElement.tagName === "IMG" ||
+          selectedElement.tagName === "VIDEO"
+        ) {
+          selectedElement.style.width = `${
+            event.clientX - selectedElement.getBoundingClientRect().left
+          }px`;
+        }
       }
     };
 
     const scrapWindowMouseup = (event) => {
-      if (selectedSidebarToolRef.current === "selectMode") {
-        if (!isDrag) return;
+      if (!isDrag) return;
 
+      isDrag = false;
+
+      if (selectedSidebarToolRef.current === "selectMode") {
         const boxes = document.getElementsByClassName("BoxComponent");
         const copiedBox = boxes[0].cloneNode(false);
 
@@ -178,7 +184,6 @@ const ScrapWindow = () => {
           );
         }
 
-        isDrag = false;
         selectedElement.style.top = `${event.clientY}px`;
         selectedElement.style.left = `${event.clientX}px`;
 
@@ -212,6 +217,8 @@ const ScrapWindow = () => {
         }
       } else if (selectedSidebarToolRef.current === "editMode") {
       }
+
+      selectedElement = null;
     };
 
     resizerRight.addEventListener("mousedown", onMouseDownRightResize);
