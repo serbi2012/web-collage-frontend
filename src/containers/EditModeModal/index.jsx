@@ -16,6 +16,7 @@ const EditModalContainer = styled.div`
   background-color: ${COLORS.MAIN_COLOR};
   border-radius: 5px;
   z-index: 200000;
+  user-select: none;
 
   select {
     color: ${COLORS.SUB_COLOR};
@@ -31,6 +32,7 @@ const EditModalContainer = styled.div`
     padding: 2px;
     color: ${COLORS.SUB_COLOR};
     border-radius: 5px;
+    cursor: pointer;
     transition: all 0.2s ease-in-out;
 
     :hover {
@@ -74,6 +76,7 @@ const EditModal = () => {
   return (
     <EditModalContainer
       id="editModal"
+      contentEditable={false}
       style={{
         display: selectedSidebarTool !== "editMode" && "none",
       }}
@@ -91,19 +94,19 @@ const EditModal = () => {
       <span
         class="material-symbols-outlined"
         onClick={() => {
-          // var selected = window.getSelection().getRangeAt(0);
-
-          // var node = document.createElement("b");
-          // node.innerText = selected;
-
-          // selected.deleteContents();
-          // selected.insertNode(node);
-          window.getSelection().execCommand("bold");
+          document.execCommand("bold");
         }}
       >
         format_bold
       </span>
-      <span class="material-symbols-outlined">format_italic</span>
+      <span
+        class="material-symbols-outlined"
+        onClick={() => {
+          document.execCommand("italic");
+        }}
+      >
+        format_italic
+      </span>
       <span class="material-symbols-outlined">attachment</span>
     </EditModalContainer>
   );
