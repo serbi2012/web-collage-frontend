@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRef } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
+import hasClass from "../../../utils/hasClass";
+import isMouseOn from "../../../utils/isMouseOn";
 import COLORS from "../../constants/COLORS";
 import EditModal from "../EditModeModal";
 
@@ -51,7 +53,7 @@ const ScrapWindowContainer = styled.div`
   }
 
   .selectedDom {
-    border: 2px solid #ff6767;
+    box-shadow: 0 0 0 2px #ff676775;
     border-radius: 2px;
   }
 `;
@@ -97,6 +99,7 @@ const ScrapWindow = () => {
     const styles = window.getComputedStyle(resizableElement);
     const webWindow = document.getElementById("webWindow");
     const scrapWindow = document.getElementById("scrapWindowContentBox");
+    const editModal = document.getElementById("editModal");
 
     let isDrag = false;
     let selectedElement;
@@ -126,13 +129,13 @@ const ScrapWindow = () => {
     };
 
     const scrapWindowContentMouseover = (event) => {
-      if (event.target === scrapWindow) return;
+      if (event.target === scrapWindow || isMouseOn(editModal)) return;
 
       event.target.classList.add("selectedDom");
     };
 
     const scrapWindowContentMouseout = (event) => {
-      if (event.target === scrapWindow) return;
+      if (event.target === scrapWindow || isMouseOn(editModal)) return;
 
       event.target.classList.remove("selectedDom");
     };
@@ -178,23 +181,12 @@ const ScrapWindow = () => {
         const boxes = document.getElementsByClassName("BoxComponent");
         const copiedBox = boxes[0].cloneNode(false);
 
-        function hasClass(element, className) {
-          return (
-            (" " + element.className + " ").indexOf(" " + className + " ") > -1
-          );
-        }
-
         selectedElement.style.top = `${event.clientY}px`;
         selectedElement.style.left = `${event.clientX}px`;
 
         if (sidebarModeOptionRef.current === "BoxAndBlockMode") {
           for (let i = 0; i < boxes.length; i++) {
-            if (
-              boxes[i].getBoundingClientRect().top < event.clientY &&
-              boxes[i].getBoundingClientRect().bottom > event.clientY &&
-              boxes[i].getBoundingClientRect().left < event.clientX &&
-              boxes[i].getBoundingClientRect().right > event.clientX
-            ) {
+            if (isMouseOn(boxes[i])) {
               selectedElement.style.position = "relative";
               selectedElement.style.removeProperty("top");
               selectedElement.style.removeProperty("left");

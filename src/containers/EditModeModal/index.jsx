@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import COLORS from "../../constants/COLORS";
+import EDIT_MODAL_OPTIONS from "../../constants/EDIT_MODAL_OPTIONS";
+import EditModalOption from "../EditModalOption";
 
 const EditModalContainer = styled.div`
   position: absolute;
@@ -9,8 +11,8 @@ const EditModalContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 20px 20px;
-  top: 17vh;
-  left: 90px;
+  top: 10px;
+  left: 80px;
   height: 50px;
   background-color: ${COLORS.MAIN_COLOR};
   border-radius: 5px;
@@ -27,24 +29,11 @@ const EditModalContainer = styled.div`
     }
   }
 
-  span {
-    padding: 2px;
-    color: ${COLORS.SUB_COLOR};
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-
-    :hover {
-      color: ${COLORS.MAIN_COLOR};
-      background-color: ${COLORS.SUB_COLOR};
-      opacity: 0.7;
-    }
-
-    :active {
-      color: ${COLORS.MAIN_COLOR};
-      background-color: ${COLORS.SUB_COLOR};
-      opacity: 0.4;
-    }
+  .EditModal-verticalLine {
+    margin: 0 10px;
+    height: 25px;
+    width: 1px;
+    background-color: ${COLORS.SUB_COLOR};
   }
 `;
 
@@ -55,25 +44,6 @@ const EditModal = () => {
 
   const [fontSize, setFontSize] = useState(null);
   const [fontName, setFontName] = useState(null);
-
-  useEffect(() => {
-    const editModal = document.getElementById("editModal");
-    const scrapWindow = document.getElementById("scrapWindowContentBox");
-
-    scrapWindow.addEventListener("mouseup", (event) => {
-      if (
-        !(
-          editModal.getBoundingClientRect().top < event.clientY &&
-          editModal.getBoundingClientRect().bottom > event.clientY &&
-          editModal.getBoundingClientRect().left < event.clientX &&
-          editModal.getBoundingClientRect().right > event.clientX
-        )
-      ) {
-        editModal.style.top = `${event.clientY - 60}px`;
-        editModal.style.left = `${event.clientX}px`;
-      }
-    });
-  });
 
   return (
     <EditModalContainer
@@ -115,23 +85,16 @@ const EditModal = () => {
         <option value="6">32</option>
         <option value="7">48</option>
       </select>
-      <span
-        class="material-symbols-outlined"
-        onClick={() => {
-          document.execCommand("bold");
-        }}
-      >
-        format_bold
-      </span>
-      <span
-        class="material-symbols-outlined"
-        onClick={() => {
-          document.execCommand("italic");
-        }}
-      >
-        format_italic
-      </span>
-      <span class="material-symbols-outlined">attachment</span>
+      <div className="EditModal-verticalLine" />
+      {EDIT_MODAL_OPTIONS.map((value, index) => {
+        return (
+          <EditModalOption
+            option={value.OPTION}
+            icon={value.ICON}
+            key={index}
+          />
+        );
+      })}
     </EditModalContainer>
   );
 };

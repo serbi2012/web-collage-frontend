@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import deleteCookie from "../../../utils/deleteCookie";
 import getCookie from "../../../utils/getCookie";
+import isMouseOn from "../../../utils/isMouseOn";
 import COLORS from "../../constants/COLORS";
 import { setUrlAddress } from "../../redux/reducers/urlAddress";
 import AddressBarBox from "../AddressBar";
@@ -84,7 +85,7 @@ const WebWindowContainer = styled.div`
   }
 
   .selectedDom {
-    border: 2px solid #ff6767;
+    box-shadow: 0 0 0 2px #ff676775;
     border-radius: 2px;
   }
 `;
@@ -169,12 +170,7 @@ const WebWindow = () => {
       block.style.left = `${event.clientX}px`;
 
       for (let i = 0; i < boxes.length; i++) {
-        if (
-          boxes[i].getBoundingClientRect().top < event.clientY &&
-          boxes[i].getBoundingClientRect().bottom > event.clientY &&
-          boxes[i].getBoundingClientRect().left < event.clientX &&
-          boxes[i].getBoundingClientRect().right > event.clientX
-        ) {
+        if (isMouseOn(boxes[i])) {
           selectedElement.style.position = "relative";
           selectedElement.style.removeProperty("top");
           selectedElement.style.removeProperty("left");
