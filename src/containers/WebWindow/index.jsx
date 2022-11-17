@@ -6,7 +6,6 @@ import styled from "styled-components";
 import deleteCookie from "../../../utils/deleteCookie";
 import getCookie from "../../../utils/getCookie";
 import COLORS from "../../constants/COLORS";
-import { addBlocks } from "../../redux/reducers/blocks";
 import { setUrlAddress } from "../../redux/reducers/urlAddress";
 import AddressBarBox from "../AddressBar";
 
@@ -145,8 +144,8 @@ const WebWindow = () => {
 
       setSelectedBlock(selectedElement.outerHTML);
 
-      positionY = event.target.offsetTop;
-      positionX = event.target.offsetLeft;
+      positionY = event.target.getBoundingClientRect().top;
+      positionX = event.target.getBoundingClientRect().left;
       block.style.top = `${positionY}px`;
       block.style.left = `${positionX}px`;
     };
@@ -191,15 +190,17 @@ const WebWindow = () => {
         }
       }
 
-      selectedElement.style.position = "relative";
-      selectedElement.style.removeProperty("top");
-      selectedElement.style.removeProperty("left");
-      copiedBox.insertAdjacentElement(
-        "beforeend",
-        selectedElement.cloneNode(true)
-      );
+      if (webWindow.getBoundingClientRect().left > event.clientX) {
+        selectedElement.style.position = "relative";
+        selectedElement.style.removeProperty("top");
+        selectedElement.style.removeProperty("left");
+        copiedBox.insertAdjacentElement(
+          "beforeend",
+          selectedElement.cloneNode(true)
+        );
 
-      scrapWindow.insertAdjacentElement("beforeend", copiedBox);
+        scrapWindow.insertAdjacentElement("beforeend", copiedBox);
+      }
 
       block.style.display = "none";
     };

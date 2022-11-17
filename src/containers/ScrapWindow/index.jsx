@@ -5,14 +5,13 @@ import { useRef } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import COLORS from "../../constants/COLORS";
-import Block from "../Block";
+import EditModal from "../EditModeModal";
 
 const ScrapWindowContainer = styled.div`
   display: flex;
   width: calc((100vw - 70px) / 2);
   height: 100vh;
   border-radius: 3px;
-  user-select: none;
 
   .contentBox {
     display: flex;
@@ -71,18 +70,26 @@ const Box = styled.div`
 const ScrapWindow = () => {
   const resizableElementRef = useRef(null);
   const rightResizerRef = useRef(null);
-  const selectModeOptionRef = useRef(null);
+  const sidebarModeOptionRef = useRef(null);
+  const selectedSidebarToolRef = useRef(null);
 
-  const { blocks } = useSelector(({ blocks }) => blocks);
-  const { selectModeOption } = useSelector(
-    ({ selectModeOption }) => selectModeOption
+  const { sidebarModeOption } = useSelector(
+    ({ sidebarModeOption }) => sidebarModeOption
+  );
+
+  const { selectedSidebarTool } = useSelector(
+    ({ selectedSidebarTool }) => selectedSidebarTool
   );
 
   const [isFullScreen, setIsFullScreen] = useState(false);
 
   useEffect(() => {
-    selectModeOptionRef.current = selectModeOption;
-  }, [selectModeOption]);
+    sidebarModeOptionRef.current = sidebarModeOption;
+  }, [sidebarModeOption]);
+
+  useEffect(() => {
+    selectedSidebarToolRef.current = selectedSidebarTool;
+  }, [selectedSidebarTool]);
 
   useEffect(() => {
     const resizableElement = resizableElementRef.current;
@@ -133,53 +140,77 @@ const ScrapWindow = () => {
     const scrapWindowMousedown = (event) => {
       if (event.target === scrapWindow) return;
 
-      isDrag = true;
       selectedElement = event.target;
 
-      selectedElement.style.position = "absolute";
-      selectedElement.style.top = `${event.target.offsetTop}px`;
-      selectedElement.style.left = `${event.target.offsetLeft}px`;
+      if (selectedSidebarToolRef.current === "selectMode") {
+        isDrag = true;
+
+        selectedElement.style.position = "absolute";
+        selectedElement.style.top = `${
+          event.target.getBoundingClientRect().bottom
+        }px`;
+        selectedElement.style.left = `${
+          event.target.getBoundingClientRect().left
+        }px`;
+      } else if (selectedSidebarToolRef.current === "editMode") {
+      }
     };
 
     const scrapWindowMousemove = (event) => {
-      if (!isDrag) return;
+      if (selectedSidebarToolRef.current === "selectMode") {
+        if (!isDrag) return;
 
-      selectedElement.style.top = `${event.clientY}px`;
-      selectedElement.style.left = `${event.clientX}px`;
+        selectedElement.style.top = `${event.clientY}px`;
+        selectedElement.style.left = `${event.clientX}px`;
+      }
     };
 
     const scrapWindowMouseup = (event) => {
-      if (!isDrag) return;
+      if (selectedSidebarToolRef.current === "selectMode") {
+        if (!isDrag) return;
 
-      const boxes = document.getElementsByClassName("BoxComponent");
-      const copiedBox = boxes[0].cloneNode(false);
+        const boxes = document.getElementsByClassName("BoxComponent");
+        const copiedBox = boxes[0].cloneNode(false);
 
-      isDrag = false;
-      selectedElement.style.top = `${event.clientY}px`;
-      selectedElement.style.left = `${event.clientX}px`;
-
-      if (selectModeOptionRef.current === "BoxAndBlockMode") {
-        for (let i = 0; i < boxes.length; i++) {
-          if (
-            boxes[i].getBoundingClientRect().top < event.clientY &&
-            boxes[i].getBoundingClientRect().bottom > event.clientY &&
-            boxes[i].getBoundingClientRect().left < event.clientX &&
-            boxes[i].getBoundingClientRect().right > event.clientX
-          ) {
-            selectedElement.style.position = "relative";
-            selectedElement.style.removeProperty("top");
-            selectedElement.style.removeProperty("left");
-            boxes[i].insertAdjacentElement("beforeend", selectedElement);
-
-            return;
-          }
+        function hasClass(element, className) {
+          return (
+            (" " + element.className + " ").indexOf(" " + className + " ") > -1
+          );
         }
 
-        selectedElement.style.position = "relative";
-        selectedElement.style.removeProperty("top");
-        selectedElement.style.removeProperty("left");
-        copiedBox.insertAdjacentElement("beforeend", selectedElement);
-        scrapWindow.insertAdjacentElement("beforeend", copiedBox);
+        isDrag = false;
+        selectedElement.style.top = `${event.clientY}px`;
+        selectedElement.style.left = `${event.clientX}px`;
+
+        if (sidebarModeOptionRef.current === "BoxAndBlockMode") {
+          for (let i = 0; i < boxes.length; i++) {
+            if (
+              boxes[i].getBoundingClientRect().top < event.clientY &&
+              boxes[i].getBoundingClientRect().bottom > event.clientY &&
+              boxes[i].getBoundingClientRect().left < event.clientX &&
+              boxes[i].getBoundingClientRect().right > event.clientX
+            ) {
+              selectedElement.style.position = "relative";
+              selectedElement.style.removeProperty("top");
+              selectedElement.style.removeProperty("left");
+              boxes[i].insertAdjacentElement("beforeend", selectedElement);
+
+              return;
+            }
+          }
+
+          if (hasClass(selectedElement, "BoxComponent")) {
+            scrapWindow.insertAdjacentElement("beforeend", selectedElement);
+          } else {
+            copiedBox.insertAdjacentElement("beforeend", selectedElement);
+            scrapWindow.insertAdjacentElement("beforeend", copiedBox);
+          }
+
+          selectedElement.style.position = "relative";
+          selectedElement.style.removeProperty("top");
+          selectedElement.style.removeProperty("left");
+        }
+      } else if (selectedSidebarToolRef.current === "editMode") {
       }
     };
 
@@ -193,9 +224,13 @@ const ScrapWindow = () => {
 
   return (
     <ScrapWindowContainer ref={resizableElementRef} className="resizable">
-      <div id="scrapWindowContentBox" className="contentBox">
-        <Box className="BoxComponent"></Box>
-        <Box className="BoxComponent"></Box>
+      <div
+        contentEditable={selectedSidebarToolRef.current === "editMode" && true}
+        id="scrapWindowContentBox"
+        className="contentBox"
+      >
+        <Box className="BoxComponent" contenteditable></Box>
+        <EditModal />
       </div>
       <div ref={rightResizerRef} className="resizer-r"></div>
       <div
