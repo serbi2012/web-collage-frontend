@@ -1,10 +1,9 @@
 import React from "react";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import COLORS from "../../constants/COLORS";
 import SIDEBAR_TOOLS from "../../constants/SIDEBAR_TOOLS";
-import { toggleModalOpen } from "../../redux/reducers/selectedSidebarTool";
 import { changeSidebarModeOption } from "../../redux/reducers/sidebarModeOption";
 import SidebarFoldButton from "../SidebarFoldButton";
 import SidebarModal from "../SidebarModal";
