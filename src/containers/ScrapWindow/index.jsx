@@ -225,7 +225,7 @@ const ScrapWindow = () => {
   return (
     <ScrapWindowContainer ref={resizableElementRef} className="resizable">
       <div
-        contentEditable={selectedSidebarToolRef.current === "editMode" && true}
+        contentEditable={selectedSidebarToolRef.current === "editMode"}
         suppressContentEditableWarning={true}
         id="scrapWindowContentBox"
         className="contentBox"

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import COLORS from "../../constants/COLORS";
@@ -12,7 +12,6 @@ const EditModalContainer = styled.div`
   top: 17vh;
   left: 90px;
   height: 50px;
-  width: 250px;
   background-color: ${COLORS.MAIN_COLOR};
   border-radius: 5px;
   z-index: 200000;
@@ -54,6 +53,9 @@ const EditModal = () => {
     ({ selectedSidebarTool }) => selectedSidebarTool
   );
 
+  const [fontSize, setFontSize] = useState(null);
+  const [fontName, setFontName] = useState(null);
+
   useEffect(() => {
     const editModal = document.getElementById("editModal");
     const scrapWindow = document.getElementById("scrapWindowContentBox");
@@ -81,15 +83,37 @@ const EditModal = () => {
         display: selectedSidebarTool !== "editMode" && "none",
       }}
     >
-      <select name="fontType" id="fontType">
-        <option value="inter">inter</option>
-        <option value="gothic">gothic</option>
+      <select
+        name="fontType"
+        id="fontType"
+        value={fontName}
+        onChange={(event) => {
+          setFontName(event.target.value);
+          document.execCommand("fontName", false, event.target.value);
+        }}
+      >
+        <option value="monospace">Monospace</option>
+        <option value="Arial">Arial</option>
+        <option value="Impact">Impact</option>
+        <option value="Georgia">Georgia</option>
+        <option value="Verdana">Verdana</option>
       </select>
-      <select name="fontSize" id="fontSize">
-        <option value="10">10</option>
-        <option value="12">12</option>
-        <option value="14">14</option>
-        <option value="16">16</option>
+      <select
+        name="fontSize"
+        id="fontSize"
+        value={fontSize}
+        onChange={(event) => {
+          setFontSize(event.target.value);
+          document.execCommand("fontSize", false, event.target.value);
+        }}
+      >
+        <option value="1">10</option>
+        <option value="2">13</option>
+        <option value="3">16</option>
+        <option value="4">18</option>
+        <option value="5">24</option>
+        <option value="6">32</option>
+        <option value="7">48</option>
       </select>
       <span
         class="material-symbols-outlined"
