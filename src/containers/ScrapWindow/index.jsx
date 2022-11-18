@@ -7,6 +7,7 @@ import styled from "styled-components";
 import hasClass from "../../../utils/hasClass";
 import isMouseOn from "../../../utils/isMouseOn";
 import COLORS from "../../constants/COLORS";
+import Drawing from "../Drawing";
 import EditModal from "../EditModeModal";
 
 const ScrapWindowContainer = styled.div`
@@ -100,6 +101,7 @@ const ScrapWindow = () => {
     const webWindow = document.getElementById("webWindow");
     const scrapWindow = document.getElementById("scrapWindowContentBox");
     const editModal = document.getElementById("editModal");
+    const drawingCanvas = document.getElementById("drawingCanvas");
 
     let isDrag = false;
     let selectedElement;
@@ -129,19 +131,30 @@ const ScrapWindow = () => {
     };
 
     const scrapWindowContentMouseover = (event) => {
-      if (event.target === scrapWindow || isMouseOn(editModal)) return;
+      if (
+        event.target === scrapWindow ||
+        isMouseOn(editModal) ||
+        selectedSidebarToolRef.current === "drawingMode"
+      )
+        return;
 
       event.target.classList.add("selectedDom");
     };
 
     const scrapWindowContentMouseout = (event) => {
-      if (event.target === scrapWindow || isMouseOn(editModal)) return;
+      if (
+        event.target === scrapWindow ||
+        isMouseOn(editModal) ||
+        selectedSidebarToolRef.current === "drawingMode"
+      )
+        return;
 
       event.target.classList.remove("selectedDom");
     };
 
     const scrapWindowMousedown = (event) => {
-      if (event.target === scrapWindow) return;
+      if (event.target === scrapWindow || event.target === drawingCanvas)
+        return;
 
       selectedElement = event.target;
       isDrag = true;
@@ -231,6 +244,7 @@ const ScrapWindow = () => {
       >
         <Box className="BoxComponent"></Box>
         <EditModal />
+        <Drawing />
       </div>
       <div ref={rightResizerRef} className="resizer-r"></div>
       <div
