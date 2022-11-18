@@ -8,12 +8,12 @@ export default [
     MODE: "editMode",
   },
   {
-    ICON: "border_color",
-    MODE: "drawingMode",
-  },
-  {
     ICON: "check_box_outline_blank",
     MODE: "boxMode",
+  },
+  {
+    ICON: "border_color",
+    MODE: "drawingMode",
   },
   {
     ICON: "link",
