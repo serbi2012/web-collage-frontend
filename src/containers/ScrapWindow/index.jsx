@@ -73,7 +73,7 @@ const ScrapWindow = () => {
   const resizableElementRef = useRef(null);
   const rightResizerRef = useRef(null);
   const sidebarModeOptionRef = useRef(null);
-  const selectedSidebarToolRef = useRef(null);
+  const selectedSidebarToolRef = useRef(false);
 
   const { sidebarModeOption } = useSelector(
     ({ sidebarModeOption }) => sidebarModeOption
@@ -229,7 +229,7 @@ const ScrapWindow = () => {
         id="scrapWindowContentBox"
         className="contentBox"
       >
-        <Box className="BoxComponent" contenteditable></Box>
+        <Box className="BoxComponent"></Box>
         <EditModal />
       </div>
       <div ref={rightResizerRef} className="resizer-r"></div>

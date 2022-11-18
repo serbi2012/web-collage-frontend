@@ -5,8 +5,9 @@ import styled from "styled-components";
 import COLORS from "../../constants/COLORS";
 import SIDEBAR_TOOLS from "../../constants/SIDEBAR_TOOLS";
 import { changeSidebarModeOption } from "../../redux/reducers/sidebarModeOption";
+import SidebarBoxModeModal from "../SidebarBoxModeModal";
 import SidebarFoldButton from "../SidebarFoldButton";
-import SidebarModal from "../SidebarModal";
+import SidebarSelectModeModal from "../SidebarSelectModeModal";
 import SidebarTool from "../SidebarTool";
 
 const SidebarContainer = styled.div`
@@ -24,39 +25,10 @@ const SidebarContainer = styled.div`
     color: ${COLORS.MAIN_COLOR};
     background-color: ${COLORS.SUB_COLOR};
   }
-
-  .sidebarModeOption {
-    margin: 5px 0px;
-    padding: 3px 10px;
-    text-align: center;
-    background-color: ${COLORS.SUB_COLOR};
-    border: 1px solid ${COLORS.MAIN_COLOR};
-    border-radius: 5px;
-    transition: all 0.2s ease-in-out;
-    user-select: none;
-    cursor: pointer;
-
-    :hover {
-      color: ${COLORS.SUB_COLOR};
-      background-color: ${COLORS.MAIN_COLOR};
-    }
-
-    :active {
-      opacity: 0.4;
-    }
-  }
-
-  .selected {
-    color: ${COLORS.SUB_COLOR};
-    background-color: ${COLORS.MAIN_COLOR};
-  }
 `;
 
 const Sidebar = () => {
   const [isFold, setIsFold] = useState(false);
-  const [selectedMode, setSelectedMode] = useState(null);
-
-  const dispatch = useDispatch();
 
   return (
     <SidebarContainer
@@ -64,35 +36,8 @@ const Sidebar = () => {
         transform: isFold ? ["translateX(-100px)"] : ["translateX(0px)"],
       }}
     >
-      <SidebarModal
-        content={[
-          <div>
-            <h3>Select Mode</h3>
-            <div
-              className={`sidebarModeOption ${
-                selectedMode === "boxAndBlock" && "selected"
-              }`}
-              onClick={() => {
-                dispatch(changeSidebarModeOption("BoxAndBlockMode"));
-                setSelectedMode("boxAndBlock");
-              }}
-            >
-              Box & Block
-            </div>
-            <div
-              className={`sidebarModeOption ${
-                selectedMode === "freePosition" && "selected"
-              }`}
-              onClick={() => {
-                dispatch(changeSidebarModeOption("FreePositionMode"));
-                setSelectedMode("freePosition");
-              }}
-            >
-              Free Position
-            </div>
-          </div>,
-        ]}
-      ></SidebarModal>
+      <SidebarSelectModeModal />
+      <SidebarBoxModeModal />
       {SIDEBAR_TOOLS.map((value, index) => {
         return <SidebarTool icon={value.ICON} mode={value.MODE} key={index} />;
       })}

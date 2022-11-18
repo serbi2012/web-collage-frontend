@@ -1,6 +1,6 @@
 {
   "name": "web-collage",
-  "version": "0.13.1",
+  "version": "0.14.1",
   "description": "A scrap chrome extension that can take the HTML DOM element of a web page and reconfigure it in a user-desired format.",
   "license": "MIT",
   "repository": {
