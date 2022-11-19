@@ -163,7 +163,6 @@ const ScrapWindow = () => {
         selectedElement.style.position = "absolute";
         selectedElement.style.top = `${event.clientY}px`;
         selectedElement.style.left = `${event.clientX}px`;
-      } else if (selectedSidebarToolRef.current === "editMode") {
       }
     };
 
@@ -198,29 +197,21 @@ const ScrapWindow = () => {
         selectedElement.style.left = `${event.clientX}px`;
 
         if (sidebarModeOptionRef.current === "BoxAndBlockMode") {
-          for (let i = 0; i < boxes.length; i++) {
-            if (isMouseOn(boxes[i])) {
-              selectedElement.style.position = "relative";
-              selectedElement.style.removeProperty("top");
-              selectedElement.style.removeProperty("left");
-              boxes[i].insertAdjacentElement("beforeend", selectedElement);
-
-              return;
+          if (event.target === scrapWindow) {
+            if (hasClass(selectedElement, "BoxComponent")) {
+              scrapWindow.insertAdjacentElement("beforeend", selectedElement);
+            } else {
+              copiedBox.insertAdjacentElement("beforeend", selectedElement);
+              scrapWindow.insertAdjacentElement("beforeend", copiedBox);
             }
-          }
-
-          if (hasClass(selectedElement, "BoxComponent")) {
-            scrapWindow.insertAdjacentElement("beforeend", selectedElement);
           } else {
-            copiedBox.insertAdjacentElement("beforeend", selectedElement);
-            scrapWindow.insertAdjacentElement("beforeend", copiedBox);
+            event.target.insertAdjacentElement("beforeend", selectedElement);
           }
 
           selectedElement.style.position = "relative";
           selectedElement.style.removeProperty("top");
           selectedElement.style.removeProperty("left");
         }
-      } else if (selectedSidebarToolRef.current === "editMode") {
       }
 
       selectedElement = null;

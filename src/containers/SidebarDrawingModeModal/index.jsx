@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import COLORS from "../../constants/COLORS";
@@ -96,18 +96,13 @@ const SidebarDrawingModeModal = () => {
   const { selectedSidebarTool, isSidebarModalOpen } = useSelector(
     ({ selectedSidebarTool }) => selectedSidebarTool
   );
+  const { sidebarModeOption } = useSelector(
+    ({ sidebarModeOption }) => sidebarModeOption
+  );
 
   const [selectedMode, setSelectedMode] = useState(null);
 
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    const scrapWindow = document.getElementById("scrapWindowContentBox");
-
-    scrapWindow.addEventListener("mousedown", (event) => {
-      setSelectedElement(event.target);
-    });
-  }, []);
 
   return (
     <SidebarDrawingModeModalContainer
@@ -121,7 +116,7 @@ const SidebarDrawingModeModal = () => {
       <h3>Drawing Mode</h3>
       <div className="selectPenBox">
         <div
-          className={`sidebarModeOption ${
+          className={`sidebarModeOption ignoreClick ${
             selectedMode === "pen" && "selected"
           }`}
           onClick={() => {
@@ -132,7 +127,7 @@ const SidebarDrawingModeModal = () => {
           Pen
         </div>
         <div
-          className={`sidebarModeOption ${
+          className={`sidebarModeOption ignoreClick ${
             selectedMode === "highlighter" && "selected"
           }`}
           onClick={() => {
@@ -143,7 +138,7 @@ const SidebarDrawingModeModal = () => {
           Highlighter
         </div>
         <div
-          className={`sidebarModeOption ${
+          className={`sidebarModeOption ignoreClick ${
             selectedMode === "eraser" && "selected"
           }`}
           onClick={() => {
@@ -158,7 +153,7 @@ const SidebarDrawingModeModal = () => {
         <div className="drawingOption">
           <p>Width</p>
           <input
-            id="widthChange"
+            className="ignoreClick"
             type="range"
             min="1"
             max="50"
@@ -169,10 +164,15 @@ const SidebarDrawingModeModal = () => {
           />
           <div>{lineWidth}</div>
         </div>
-        <div className="drawingOption">
+        <div
+          className="drawingOption"
+          style={{
+            display: sidebarModeOption !== "Highlighter" && "none",
+          }}
+        >
           <p>Opacity</p>
           <input
-            id="opacityChange"
+            className="ignoreClick"
             type="range"
             min="10"
             max="100"
@@ -183,10 +183,15 @@ const SidebarDrawingModeModal = () => {
           />
           <div>{lineOpacity}</div>
         </div>
-        <div className="drawingOption">
+        <div
+          className="drawingOption"
+          style={{
+            display: sidebarModeOption === "Eraser" && "none",
+          }}
+        >
           <p>Color</p>
           <input
-            id="colorChange"
+            className="ignoreClick"
             type="color"
             onChange={(event) => {
               dispatch(setLineColor(event.target.value));
