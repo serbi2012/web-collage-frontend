@@ -2,6 +2,7 @@ import axios from "axios";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import { SERVER_ADDRESS } from "../../../utils/env";
 import getCookie from "../../../utils/getCookie";
 import COLORS from "../../constants/COLORS";
 import { setUrlAddress } from "../../redux/reducers/urlAddress";
@@ -113,13 +114,10 @@ const AddressBarBox = ({
             .split("/")
             .shift();
           const { data } = await axios.get(urlAddress);
-          const htmlString = await axios.post(
-            process.env.REACT_APP_SERVER_ADDRESS,
-            {
-              originalHtml: data,
-              sourceDomain,
-            }
-          );
+          const htmlString = await axios.post(`${SERVER_ADDRESS}`, {
+            originalHtml: data,
+            sourceDomain,
+          });
 
           dispatch(setUrlAddress(htmlString.data.htmlString));
 

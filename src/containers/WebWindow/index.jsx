@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import deleteCookie from "../../../utils/deleteCookie";
+import { SERVER_ADDRESS } from "../../../utils/env";
 import getCookie from "../../../utils/getCookie";
 import isMouseOn from "../../../utils/isMouseOn";
 import COLORS from "../../constants/COLORS";
@@ -215,13 +216,11 @@ const WebWindow = () => {
 
       const sourceDomain = url.slice(`https://`.length).split("/").shift();
       const { data } = await axios.get(url);
-      const htmlString = await axios.post(
-        process.env.REACT_APP_SERVER_ADDRESS,
-        {
-          originalHtml: data,
-          sourceDomain,
-        }
-      );
+      const htmlString = await axios.post(`${SERVER_ADDRESS}`, {
+        originalHtml: data,
+        sourceDomain,
+      });
+      console.log("SERVER_ADDRESS", SERVER_ADDRESS);
 
       dispatch(setUrlAddress(htmlString.data.htmlString));
 
