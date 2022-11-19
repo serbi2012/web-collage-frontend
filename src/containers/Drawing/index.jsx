@@ -8,6 +8,15 @@ import {
 } from "../../../utils/drawLine";
 import hasClass from "../../../utils/hasClass";
 
+const DrawingContainer = styled.div`
+  canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    user-select: none;
+  }
+`;
+
 const Drawing = () => {
   const selectedSidebarToolRef = useRef(false);
   const sidebarModeOptionRef = useRef(null);
@@ -167,14 +176,5 @@ const Drawing = () => {
     </DrawingContainer>
   );
 };
-
-const DrawingContainer = styled.div`
-  canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    user-select: none;
-  }
-`;
 
 export default Drawing;

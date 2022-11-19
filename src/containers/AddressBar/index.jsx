@@ -108,9 +108,26 @@ const AddressBarBox = ({
       <span
         className="material-symbols-outlined AddressBar-changeUrlButton"
         onClick={async () => {
+          const sourceDomain = urlAddress
+            .slice(`https://`.length)
+            .split("/")
+            .shift();
           const { data } = await axios.get(urlAddress);
+          const htmlString = await axios.post(
+            process.env.REACT_APP_SERVER_ADDRESS,
+            {
+              originalHtml: data,
+              sourceDomain,
+            }
+          );
 
-          setIframeDom(data);
+          dispatch(setUrlAddress(htmlString.data.htmlString));
+
+          if (getCookie("urlAddress")) {
+            deleteCookie("urlAddress");
+          }
+
+          setIframeDom(htmlString.data.htmlString);
         }}
       >
         arrow_forward

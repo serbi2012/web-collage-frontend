@@ -54,7 +54,7 @@ const WebWindowContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    bottom: 55px;
+    bottom: 15px;
     right: 15px;
     height: 35px;
     width: 35px;
@@ -82,6 +82,8 @@ const WebWindowContainer = styled.div`
   .WebWindow-scrapMode {
     color: ${COLORS.SUB_COLOR};
     background-color: ${COLORS.MAIN_COLOR};
+    user-select: none;
+    cursor: pointer;
   }
 
   .selectedDom {
@@ -211,15 +213,23 @@ const WebWindow = () => {
         urlAddress ||
         "https://illuminating-extol-innovation.w3spaces.com/";
 
+      const sourceDomain = url.slice(`https://`.length).split("/").shift();
       const { data } = await axios.get(url);
+      const htmlString = await axios.post(
+        process.env.REACT_APP_SERVER_ADDRESS,
+        {
+          originalHtml: data,
+          sourceDomain,
+        }
+      );
 
-      dispatch(setUrlAddress(url));
+      dispatch(setUrlAddress(htmlString.data.htmlString));
 
       if (getCookie("urlAddress")) {
         deleteCookie("urlAddress");
       }
 
-      setIframeDom(data);
+      setIframeDom(htmlString.data.htmlString);
     })();
   }, []);
 
@@ -245,11 +255,6 @@ const WebWindow = () => {
         }}
       >
         <span className="material-symbols-outlined">file_copy</span>
-      </div>
-      <div className="WebWindow-ratioButton">
-        <span>-</span>
-        <div>100%</div>
-        <span>+</span>
       </div>
       <BodyContainer
         id="webWindowContent"
