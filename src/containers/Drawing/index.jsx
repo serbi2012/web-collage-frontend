@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   drawLineWithPen,
   drawLineWithHighlighter,
+  drawLineWithEraser,
 } from "../../../utils/drawLine";
+import hasClass from "../../../utils/hasClass";
 
 const Drawing = () => {
   const selectedSidebarToolRef = useRef(false);
@@ -24,8 +26,6 @@ const Drawing = () => {
   const { sidebarModeOption } = useSelector(
     ({ sidebarModeOption }) => sidebarModeOption
   );
-
-  const dispatch = useDispatch();
 
   useEffect(() => {
     selectedSidebarToolRef.current = selectedSidebarTool;
@@ -50,10 +50,6 @@ const Drawing = () => {
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
-    const drawingModeModal = document.getElementById("drawingModeModal");
-    const widthChange = document.getElementById("widthChange");
-    const opacityChange = document.getElementById("opacityChange");
-    const colorChange = document.getElementById("colorChange");
     const scrapWindow = document.getElementById("scrapWindowContentBox");
 
     let drawing = false;
@@ -63,10 +59,7 @@ const Drawing = () => {
     const onMouseDown = (event) => {
       if (
         selectedSidebarToolRef.current !== "drawingMode" ||
-        event.target === drawingModeModal ||
-        event.target === widthChange ||
-        event.target === opacityChange ||
-        event.target === colorChange
+        hasClass(event.target, "ignoreClick")
       )
         return;
 
@@ -101,6 +94,16 @@ const Drawing = () => {
         );
 
         startPosition = [event.clientX, startPosition[1]];
+      } else if (sidebarModeOptionRef.current === "Eraser") {
+        drawLineWithEraser(
+          context,
+          startPosition,
+          [event.clientX, event.clientY],
+          lineColorRef.current,
+          lineWidthRef.current
+        );
+
+        startPosition = [event.clientX, event.clientY];
       }
     };
 
@@ -124,6 +127,14 @@ const Drawing = () => {
           context,
           startPosition,
           [event.clientX, highlighterEndPosition],
+          lineColorRef.current,
+          lineWidthRef.current
+        );
+      } else if (sidebarModeOptionRef.current === "Eraser") {
+        drawLineWithEraser(
+          context,
+          startPosition,
+          [event.clientX, event.clientY],
           lineColorRef.current,
           lineWidthRef.current
         );

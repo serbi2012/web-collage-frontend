@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import hasClass from "../../../utils/hasClass";
 import COLORS from "../../constants/COLORS";
 
 const SidebarBoxModeModalContainer = styled.div`
@@ -153,7 +154,19 @@ const SidebarBoxModeModal = () => {
           scrapWindow.insertAdjacentElement("beforeend", copiedBox);
         }}
       >
-        Add Box
+        Add
+      </div>
+      <hr />
+      <h4>Delete Box</h4>
+      <div
+        className="sidebarModeOption"
+        onClick={() => {
+          if (hasClass(selectedElement, "BoxComponent")) {
+            selectedElement.remove();
+          }
+        }}
+      >
+        Delete
       </div>
       <hr />
       <div className="sortContainer">
