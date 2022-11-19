@@ -126,6 +126,7 @@ const SidebarBoxModeModal = () => {
   );
 
   const [selectedElement, setSelectedElement] = useState(null);
+  const [isBoxBorder, setIsBoxBorder] = useState(true);
 
   useEffect(() => {
     const scrapWindow = document.getElementById("scrapWindowContentBox");
@@ -143,7 +144,6 @@ const SidebarBoxModeModal = () => {
       }}
     >
       <h3>Box Mode</h3>
-      <h4>Add Box</h4>
       <div
         className="sidebarModeOption"
         onClick={() => {
@@ -154,10 +154,8 @@ const SidebarBoxModeModal = () => {
           scrapWindow.insertAdjacentElement("beforeend", copiedBox);
         }}
       >
-        Add
+        Add Box
       </div>
-      <hr />
-      <h4>Delete Box</h4>
       <div
         className="sidebarModeOption"
         onClick={() => {
@@ -166,7 +164,26 @@ const SidebarBoxModeModal = () => {
           }
         }}
       >
-        Delete
+        Delete Box
+      </div>
+      <hr />
+      <div
+        className="sidebarModeOption"
+        onClick={() => {
+          const boxes = document.getElementsByClassName("BoxComponent");
+
+          for (let i = 0; i < boxes.length; i++) {
+            if (isBoxBorder) {
+              boxes[i].style.boxShadow = "none";
+            } else {
+              boxes[i].style.boxShadow = "0 0 0 2px #ccc";
+            }
+          }
+
+          setIsBoxBorder(!isBoxBorder);
+        }}
+      >
+        Toggle Box Border
       </div>
       <hr />
       <div className="sortContainer">

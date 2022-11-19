@@ -54,7 +54,7 @@ const ScrapWindowContainer = styled.div`
   }
 
   .selectedDom {
-    box-shadow: 0 0 0 2px #ff676775;
+    box-shadow: 0 0 0 2px #ff676775 !important;
     border-radius: 2px;
   }
 `;
@@ -67,7 +67,7 @@ const Box = styled.div`
   margin: 5px 0;
   padding: 10px;
   width: 500px;
-  border: 2px solid #ccc;
+  box-shadow: 0 0 0 2px #ccc;
 `;
 
 const ScrapWindow = () => {
@@ -230,6 +230,9 @@ const ScrapWindow = () => {
       <div
         contentEditable={selectedSidebarToolRef.current === "editMode"}
         suppressContentEditableWarning={true}
+        style={{
+          userSelect: selectedSidebarToolRef.current === "selectMode" && "none",
+        }}
         id="scrapWindowContentBox"
         className="contentBox"
       >
