@@ -7,6 +7,7 @@ import styled from "styled-components";
 import hasClass from "../../../utils/hasClass";
 import isMouseOn from "../../../utils/isMouseOn";
 import COLORS from "../../constants/COLORS";
+import THEME from "../../constants/THEME";
 import Drawing from "../Drawing";
 import EditModal from "../EditModeModal";
 
@@ -57,6 +58,31 @@ const ScrapWindowContainer = styled.div`
     box-shadow: 0 0 0 2px #ff676775 !important;
     border-radius: 2px;
   }
+
+  .theme-dark {
+    color: ${THEME.DARK.FONT_COLOR} !important;
+    background-color: ${THEME.DARK.BACKGROUND_COLOR}!important;
+  }
+
+  .theme-blue {
+    color: ${THEME.BLUE.FONT_COLOR} !important;
+    background-color: ${THEME.BLUE.BACKGROUND_COLOR} !important;
+  }
+
+  .theme-brown {
+    color: ${THEME.BROWN.FONT_COLOR} !important;
+    background-color: ${THEME.BROWN.BACKGROUND_COLOR} !important;
+  }
+
+  .theme-skyblue {
+    color: ${THEME.SKY_BLUE.FONT_COLOR} !important;
+    background-color: ${THEME.SKY_BLUE.BACKGROUND_COLOR} !important;
+  }
+
+  .theme-green {
+    color: ${THEME.GREEN.FONT_COLOR} !important;
+    background-color: ${THEME.GREEN.BACKGROUND_COLOR} !important;
+  }
 `;
 
 const Box = styled.div`
@@ -76,6 +102,7 @@ const ScrapWindow = () => {
   const sidebarModeOptionRef = useRef(null);
   const selectedSidebarToolRef = useRef(false);
 
+  const { theme } = useSelector(({ theme }) => theme);
   const { sidebarModeOption } = useSelector(
     ({ sidebarModeOption }) => sidebarModeOption
   );
@@ -228,13 +255,13 @@ const ScrapWindow = () => {
   return (
     <ScrapWindowContainer ref={resizableElementRef} className="resizable">
       <div
-        contentEditable={selectedSidebarToolRef.current === "editMode"}
+        contentEditable={selectedSidebarTool === "editMode"}
         suppressContentEditableWarning={true}
         style={{
-          userSelect: selectedSidebarToolRef.current === "selectMode" && "none",
+          userSelect: selectedSidebarTool === "selectMode" && "none",
         }}
         id="scrapWindowContentBox"
-        className="contentBox"
+        className={`contentBox ${theme}`}
       >
         <Box className="BoxComponent"></Box>
         <EditModal />

@@ -10,6 +10,7 @@ import SidebarDrawingModeModal from "../SidebarDrawingModeModal";
 import SidebarFoldButton from "../SidebarFoldButton";
 import SidebarSaveModeModal from "../SidebarSaveModeModal";
 import SidebarSelectModeModal from "../SidebarSelectModeModal";
+import SidebarThemeModeModal from "../SidebarThemeModeModal";
 import SidebarTool from "../SidebarTool";
 
 const SidebarContainer = styled.div`
@@ -34,6 +35,7 @@ const Sidebar = () => {
 
   return (
     <SidebarContainer
+      id="sidebar"
       style={{
         transform: isFold ? ["translateX(-100px)"] : ["translateX(0px)"],
       }}
@@ -42,6 +44,7 @@ const Sidebar = () => {
       <SidebarBoxModeModal />
       <SidebarDrawingModeModal />
       <SidebarSaveModeModal />
+      <SidebarThemeModeModal />
       {SIDEBAR_TOOLS.map((value, index) => {
         return <SidebarTool icon={value.ICON} mode={value.MODE} key={index} />;
       })}
