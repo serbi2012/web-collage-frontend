@@ -144,6 +144,8 @@ const WebWindow = () => {
       selectedElement = event.target;
 
       block.style.display = "flex";
+      block.style.position = "absolute";
+      block.style.zIndex = "1000000";
 
       setSelectedBlock(selectedElement.outerHTML);
 
