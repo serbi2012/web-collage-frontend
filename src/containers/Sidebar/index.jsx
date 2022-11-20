@@ -8,6 +8,7 @@ import { changeSidebarModeOption } from "../../redux/reducers/sidebarModeOption"
 import SidebarBoxModeModal from "../SidebarBoxModeModal";
 import SidebarDrawingModeModal from "../SidebarDrawingModeModal";
 import SidebarFoldButton from "../SidebarFoldButton";
+import SidebarSaveModeModal from "../SidebarSaveModeModal";
 import SidebarSelectModeModal from "../SidebarSelectModeModal";
 import SidebarTool from "../SidebarTool";
 
@@ -40,6 +41,7 @@ const Sidebar = () => {
       <SidebarSelectModeModal />
       <SidebarBoxModeModal />
       <SidebarDrawingModeModal />
+      <SidebarSaveModeModal />
       {SIDEBAR_TOOLS.map((value, index) => {
         return <SidebarTool icon={value.ICON} mode={value.MODE} key={index} />;
       })}
