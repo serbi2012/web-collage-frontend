@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import {
@@ -6,7 +6,7 @@ import {
   drawLineWithHighlighter,
   drawLineWithEraser,
 } from "../../../utils/drawLine";
-import hasClass from "../../../utils/hasClass";
+import isMouseOn from "../../../utils/isMouseOn";
 
 const DrawingContainer = styled.div`
   canvas {
@@ -60,6 +60,8 @@ const Drawing = () => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
     const scrapWindow = document.getElementById("scrapWindowContentBox");
+    const sidebar = document.getElementById("sidebar");
+    const drawingModeModal = document.getElementById("drawingModeModal");
 
     let drawing = false;
     let highlighterEndPosition;
@@ -68,7 +70,8 @@ const Drawing = () => {
     const onMouseDown = (event) => {
       if (
         selectedSidebarToolRef.current !== "drawingMode" ||
-        hasClass(event.target, "ignoreClick")
+        isMouseOn(sidebar) ||
+        isMouseOn(drawingModeModal)
       )
         return;
 
@@ -170,7 +173,7 @@ const Drawing = () => {
         ref={canvasRef}
         id="drawingCanvas"
         style={{
-          zIndex: selectedSidebarToolRef.current === "drawingMode" ? "1" : "-1",
+          zIndex: selectedSidebarTool === "drawingMode" ? "1" : "-1",
         }}
       />
     </DrawingContainer>

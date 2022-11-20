@@ -63,7 +63,6 @@ const SidebarSaveModeModal = () => {
       }}
     >
       <h3>Save Mode</h3>
-
       <ReactToPrint
         trigger={() => (
           <div className="sidebarModeOption" onClick={() => {}}>
