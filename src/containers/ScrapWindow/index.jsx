@@ -4,12 +4,15 @@ import { useState } from "react";
 import { useRef } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
+import { SERVER_ADDRESS } from "../../../utils/env";
 import hasClass from "../../../utils/hasClass";
 import isMouseOn from "../../../utils/isMouseOn";
 import COLORS from "../../constants/COLORS";
 import THEME from "../../constants/THEME";
 import Drawing from "../Drawing";
 import EditModal from "../EditModeModal";
+import io from "socket.io-client";
+import getCookie from "../../../utils/getCookie";
 
 const ScrapWindowContainer = styled.div`
   display: flex;
@@ -101,6 +104,7 @@ const ScrapWindow = () => {
   const rightResizerRef = useRef(null);
   const sidebarModeOptionRef = useRef(null);
   const selectedSidebarToolRef = useRef(false);
+  const socketRef = useRef(null);
 
   const { theme } = useSelector(({ theme }) => theme);
   const { sidebarModeOption } = useSelector(
@@ -180,6 +184,8 @@ const ScrapWindow = () => {
     };
 
     const scrapWindowMousedown = (event) => {
+      socketRef.current.emit("user-send", scrapWindow.outerHTML);
+
       if (event.target === scrapWindow || event.target === drawingCanvas)
         return;
 
@@ -243,6 +249,11 @@ const ScrapWindow = () => {
 
       selectedElement = null;
     };
+
+    socketRef.current = io.connect(`${SERVER_ADDRESS}`);
+    socketRef.current.on("user-send", (data) => {
+      console.log(data);
+    });
 
     resizerRight.addEventListener("mousedown", onMouseDownRightResize);
     scrapWindow.addEventListener("mouseover", scrapWindowContentMouseover);

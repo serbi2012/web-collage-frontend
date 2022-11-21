@@ -211,10 +211,20 @@ const WebWindow = () => {
     window.addEventListener("mouseup", windowMouseup);
 
     (async () => {
-      const url =
-        getCookie("urlAddress") ||
-        urlAddress ||
-        "https://illuminating-extol-innovation.w3spaces.com/";
+      let url;
+
+      if (getCookie("shareModeKey")) {
+        const scrapContent = await axios.get(
+          `${SERVER_ADDRESS}${getCookie("shareModeKey")}/shareMode`
+        );
+
+        url = scrapContent.data.scrapContent.urlAddress;
+      } else {
+        url =
+          getCookie("urlAddress") ||
+          urlAddress ||
+          "https://illuminating-extol-innovation.w3spaces.com/";
+      }
 
       const sourceDomain = url.slice(`https://`.length).split("/").shift();
       const { data } = await axios.get(url);
@@ -222,9 +232,7 @@ const WebWindow = () => {
         originalHtml: data,
         sourceDomain,
       });
-      console.log("SERVER_ADDRESS", SERVER_ADDRESS);
-
-      dispatch(setUrlAddress(htmlString.data.htmlString));
+      dispatch(setUrlAddress(url));
 
       if (getCookie("urlAddress")) {
         deleteCookie("urlAddress");
@@ -232,7 +240,7 @@ const WebWindow = () => {
 
       setIframeDom(htmlString.data.htmlString);
     })();
-  }, []);
+  }, [urlAddress]);
 
   return (
     <WebWindowContainer id="webWindow" ref={webWindowRef}>

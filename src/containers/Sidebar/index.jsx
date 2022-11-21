@@ -10,6 +10,7 @@ import SidebarDrawingModeModal from "../SidebarDrawingModeModal";
 import SidebarFoldButton from "../SidebarFoldButton";
 import SidebarSaveModeModal from "../SidebarSaveModeModal";
 import SidebarSelectModeModal from "../SidebarSelectModeModal";
+import SidebarShareModeModal from "../SidebarShareModeModal";
 import SidebarThemeModeModal from "../SidebarThemeModeModal";
 import SidebarTool from "../SidebarTool";
 
@@ -45,6 +46,7 @@ const Sidebar = () => {
       <SidebarDrawingModeModal />
       <SidebarSaveModeModal />
       <SidebarThemeModeModal />
+      <SidebarShareModeModal />
       {SIDEBAR_TOOLS.map((value, index) => {
         return <SidebarTool icon={value.ICON} mode={value.MODE} key={index} />;
       })}

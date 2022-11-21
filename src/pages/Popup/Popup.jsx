@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import setCookie from "../../../utils/setCookie";
 
@@ -61,15 +61,14 @@ const PopupContainer = styled.div`
 `;
 
 const Popup = () => {
-  useEffect(() => {
-    chrome.tabs.query(
-      { active: true, lastFocusedWindow: true },
-      function (tabs) {
-        const url = tabs[0].url;
+  const [shareModeKey, setShareModeKey] = useState("");
 
-        setCookie("urlAddress", url, 1);
-      }
-    );
+  useEffect(() => {
+    chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
+      const url = tabs[0].url;
+
+      setCookie("urlAddress", url, 1);
+    });
   }, []);
 
   return (
@@ -88,8 +87,19 @@ const Popup = () => {
       <h3>Scrap this page</h3>
       <hr />
       <h3>Enter shared page</h3>
-      <input />
-      <button>Connect</button>
+      <input
+        onChange={(event) => {
+          setShareModeKey(event.target.value);
+        }}
+      />
+      <button
+        onClick={() => {
+          setCookie("shareModeKey", shareModeKey, 1);
+          window.open("main.html");
+        }}
+      >
+        Connect
+      </button>
     </PopupContainer>
   );
 };
