@@ -152,7 +152,7 @@ const ScrapWindow = () => {
       document.removeEventListener("mousemove", onMouseMoveRightResize);
     };
 
-    const onMouseDownRightResize = (event) => {
+    const onClickRightResize = (event) => {
       windowX = event.clientX;
       resizableElement.style.left = styles.left;
       resizableElement.style.right = null;
@@ -184,8 +184,6 @@ const ScrapWindow = () => {
     };
 
     const scrapWindowMousedown = (event) => {
-      socketRef.current.emit("user-send", scrapWindow.outerHTML);
-
       if (event.target === scrapWindow || event.target === drawingCanvas)
         return;
 
@@ -248,14 +246,24 @@ const ScrapWindow = () => {
       }
 
       selectedElement = null;
+
+      socketRef.current.emit("user-send", scrapWindow.innerHTML);
     };
+
+    window.addEventListener("mouseup", () => {
+      socketRef.current.emit("user-send", scrapWindow.innerHTML);
+    });
+
+    window.addEventListener("keyup", () => {
+      socketRef.current.emit("user-send", scrapWindow.innerHTML);
+    });
 
     socketRef.current = io.connect(`${SERVER_ADDRESS}`);
     socketRef.current.on("user-send", (data) => {
-      console.log(data);
+      scrapWindow.innerHTML = data;
     });
 
-    resizerRight.addEventListener("mousedown", onMouseDownRightResize);
+    resizerRight.addEventListener("mousedown", onClickRightResize);
     scrapWindow.addEventListener("mouseover", scrapWindowContentMouseover);
     scrapWindow.addEventListener("mouseout", scrapWindowContentMouseout);
     scrapWindow.addEventListener("mousedown", scrapWindowMousedown);

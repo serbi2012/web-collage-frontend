@@ -67,7 +67,7 @@ const Drawing = () => {
     let highlighterEndPosition;
     let startPosition;
 
-    const onMouseDown = (event) => {
+    const onClick = (event) => {
       if (
         selectedSidebarToolRef.current !== "drawingMode" ||
         isMouseOn(sidebar) ||
@@ -153,7 +153,7 @@ const Drawing = () => {
       }
     };
 
-    window.addEventListener("mousedown", onMouseDown, false);
+    window.addEventListener("mousedown", onClick, false);
     window.addEventListener("mouseup", onMouseUp, false);
     window.addEventListener("mouseout", onMouseUp, false);
     window.addEventListener("mousemove", onMouseMove, false);

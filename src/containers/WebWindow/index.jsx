@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useRef } from "react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { io } from "socket.io-client";
 import styled from "styled-components";
 import deleteCookie from "../../../utils/deleteCookie";
 import { SERVER_ADDRESS } from "../../../utils/env";
@@ -103,6 +104,7 @@ const WebWindow = () => {
   const blockRef = useRef(null);
   const webWindowRef = useRef(null);
   const isScrapModeRef = useRef(false);
+  const socketRef = useRef(null);
 
   const { urlAddress } = useSelector(({ urlAddress }) => urlAddress);
 
@@ -185,6 +187,9 @@ const WebWindow = () => {
           );
 
           block.style.display = "none";
+
+          socketRef.current.emit("user-send", scrapWindow.innerHTML);
+
           return;
         }
       }
@@ -202,7 +207,11 @@ const WebWindow = () => {
       }
 
       block.style.display = "none";
+
+      socketRef.current.emit("user-send", scrapWindow.innerHTML);
     };
+
+    socketRef.current = io.connect(`${SERVER_ADDRESS}`);
 
     webWindowContent.addEventListener("mouseover", webWindowContentMouseover);
     webWindowContent.addEventListener("mouseout", webWindowContentMouseout);
