@@ -186,15 +186,17 @@ const ScrapWindow = () => {
       if (event.target === scrapWindow || event.target === drawingCanvas)
         return;
 
-      isDrag = true;
-      selectedElement = event.target;
-
       if (selectedSidebarToolRef.current === "selectMode") {
+        isDrag = true;
+        selectedElement = event.target;
         selectedElement.style.position = "absolute";
         selectedElement.style.top = `${event.clientY + 20}px`;
         selectedElement.style.left = `${event.clientX}px`;
 
         scrapWindow.insertAdjacentElement("beforeend", selectedElement);
+      } else if (selectedSidebarToolRef.current === "editMode") {
+        isDrag = true;
+        selectedElement = event.target;
       }
     };
 

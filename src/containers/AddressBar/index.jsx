@@ -1,5 +1,5 @@
 import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { SERVER_ADDRESS } from "../../../utils/env";
@@ -88,6 +88,8 @@ const AddressBarBox = ({
 }) => {
   const { urlAddress } = useSelector(({ urlAddress }) => urlAddress);
 
+  const [urlAddressInput, setUrlAddressInput] = useState("");
+
   const dispatch = useDispatch();
 
   return (
@@ -103,7 +105,7 @@ const AddressBarBox = ({
           "https://eye-catch-danke-foresight.w3spaces.com"
         }
         onChange={(event) => {
-          dispatch(setUrlAddress(event.target.value));
+          setUrlAddressInput(event.target.value);
         }}
       />
       <span
@@ -114,12 +116,12 @@ const AddressBarBox = ({
             .split("/")
             .shift();
           const { data } = await axios.get(urlAddress);
-          const htmlString = await axios.post(`${SERVER_ADDRESS}`, {
+          const htmlString = await axios.post(`${SERVER_ADDRESS}/htmlString`, {
             originalHtml: data,
             sourceDomain,
           });
 
-          dispatch(setUrlAddress(htmlString.data.htmlString));
+          dispatch(setUrlAddress(urlAddressInput));
 
           if (getCookie("urlAddress")) {
             deleteCookie("urlAddress");

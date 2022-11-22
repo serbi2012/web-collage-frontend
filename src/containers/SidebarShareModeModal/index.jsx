@@ -70,7 +70,7 @@ const SidebarShareModeModal = () => {
       if (getCookie("shareModeKey")) {
         const scrapWindow = document.getElementById("scrapWindowContentBox");
         const scrapContent = await axios.get(
-          `${SERVER_ADDRESS}${getCookie("shareModeKey")}/shareMode`
+          `${SERVER_ADDRESS}/scrapContent/${getCookie("shareModeKey")}/`
         );
 
         scrapWindow.innerHTML = scrapContent.data.scrapContent.content;
@@ -97,7 +97,7 @@ const SidebarShareModeModal = () => {
           const copyKey = document.getElementById("shareKeyInput");
 
           const newScrapContent = await axios.post(
-            `${SERVER_ADDRESS}shareMode`,
+            `${SERVER_ADDRESS}/scrapContent/`,
             {
               content: scrapWindow.innerHTML,
               urlAddress,
@@ -122,7 +122,7 @@ const SidebarShareModeModal = () => {
         onClick={async () => {
           const scrapWindow = document.getElementById("scrapWindowContentBox");
           const scrapContent = await axios.get(
-            `${SERVER_ADDRESS}${keyInput}/shareMode`
+            `${SERVER_ADDRESS}${keyInput}/scrapContent/`
           );
 
           scrapWindow.innerHTML = scrapContent.data.scrapContent.content;

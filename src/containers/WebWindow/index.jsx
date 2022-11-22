@@ -224,7 +224,7 @@ const WebWindow = () => {
 
       if (getCookie("shareModeKey")) {
         const scrapContent = await axios.get(
-          `${SERVER_ADDRESS}${getCookie("shareModeKey")}/shareMode`
+          `${SERVER_ADDRESS}/scrapContent/${getCookie("shareModeKey")}/`
         );
 
         url = scrapContent.data.scrapContent.urlAddress;
@@ -237,7 +237,7 @@ const WebWindow = () => {
 
       const sourceDomain = url.slice(`https://`.length).split("/").shift();
       const { data } = await axios.get(url);
-      const htmlString = await axios.post(`${SERVER_ADDRESS}`, {
+      const htmlString = await axios.post(`${SERVER_ADDRESS}/htmlString/`, {
         originalHtml: data,
         sourceDomain,
       });

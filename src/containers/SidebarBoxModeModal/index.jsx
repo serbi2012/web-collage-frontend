@@ -168,12 +168,10 @@ const SidebarBoxModeModal = () => {
       <div
         className="sidebarModeOption"
         onClick={() => {
-          if (hasClass(selectedElement, "BoxComponent")) {
-            selectedElement.remove();
-          }
+          selectedElement.remove();
         }}
       >
-        Delete Box
+        Delete Element
       </div>
       <hr />
       <div
