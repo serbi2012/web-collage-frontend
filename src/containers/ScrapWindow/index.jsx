@@ -281,11 +281,6 @@ const ScrapWindow = () => {
       if (shareKeyRef.current === "") {
         return;
       } else if (data.shareKey === shareKeyRef.current) {
-        console.log(
-          "socketRef.current.on ~ shareKeyRef.current",
-          shareKeyRef.current
-        );
-
         scrapWindow.innerHTML = data.scrapContent;
       }
     });

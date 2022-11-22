@@ -105,7 +105,9 @@ const WebWindow = () => {
   const webWindowRef = useRef(null);
   const isScrapModeRef = useRef(false);
   const socketRef = useRef(null);
+  const shareKeyRef = useRef(null);
 
+  const { shareKey } = useSelector(({ shareKey }) => shareKey);
   const { urlAddress } = useSelector(({ urlAddress }) => urlAddress);
 
   const [iframeDom, setIframeDom] = useState(null);
@@ -118,6 +120,10 @@ const WebWindow = () => {
   useEffect(() => {
     isScrapModeRef.current = isScrapMode;
   }, [isScrapMode]);
+
+  useEffect(() => {
+    shareKeyRef.current = shareKey;
+  }, [shareKey]);
 
   useEffect(() => {
     const webWindow = webWindowRef.current;
@@ -188,7 +194,10 @@ const WebWindow = () => {
 
           block.style.display = "none";
 
-          socketRef.current.emit("user-send", scrapWindow.innerHTML);
+          socketRef.current.emit("shareScrapContent", {
+            scrapContent: scrapWindow.innerHTML,
+            shareKey: shareKeyRef.current,
+          });
 
           return;
         }
