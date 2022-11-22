@@ -104,8 +104,10 @@ const ScrapWindow = () => {
   const sidebarModeOptionRef = useRef(null);
   const selectedSidebarToolRef = useRef(false);
   const socketRef = useRef(null);
+  const shareKeyRef = useRef(null);
 
   const { theme } = useSelector(({ theme }) => theme);
+  const { shareKey } = useSelector(({ shareKey }) => shareKey);
   const { sidebarModeOption } = useSelector(
     ({ sidebarModeOption }) => sidebarModeOption
   );
@@ -123,6 +125,10 @@ const ScrapWindow = () => {
   useEffect(() => {
     selectedSidebarToolRef.current = selectedSidebarTool;
   }, [selectedSidebarTool]);
+
+  useEffect(() => {
+    shareKeyRef.current = shareKey;
+  }, [shareKey]);
 
   useEffect(() => {
     const resizableElement = resizableElementRef.current;
@@ -250,20 +256,38 @@ const ScrapWindow = () => {
 
       selectedElement = null;
 
-      socketRef.current.emit("user-send", scrapWindow.innerHTML);
+      socketRef.current.emit("shareScrapContent", {
+        scrapContent: scrapWindow.innerHTML,
+        shareKey: shareKeyRef.current,
+      });
     };
 
     window.addEventListener("mouseup", () => {
-      socketRef.current.emit("user-send", scrapWindow.innerHTML);
+      socketRef.current.emit("shareScrapContent", {
+        scrapContent: scrapWindow.innerHTML,
+        shareKey: shareKeyRef.current,
+      });
     });
 
     window.addEventListener("keyup", () => {
-      socketRef.current.emit("user-send", scrapWindow.innerHTML);
+      socketRef.current.emit("shareScrapContent", {
+        scrapContent: scrapWindow.innerHTML,
+        shareKey: shareKeyRef.current,
+      });
     });
 
     socketRef.current = io.connect(`${SERVER_ADDRESS}`);
-    socketRef.current.on("user-send", (data) => {
-      scrapWindow.innerHTML = data;
+    socketRef.current.on("shareScrapContent", (data) => {
+      if (shareKeyRef.current === "") {
+        return;
+      } else if (data.shareKey === shareKeyRef.current) {
+        console.log(
+          "socketRef.current.on ~ shareKeyRef.current",
+          shareKeyRef.current
+        );
+
+        scrapWindow.innerHTML = data.scrapContent;
+      }
     });
 
     resizerRight.addEventListener("mousedown", onClickRightResize);

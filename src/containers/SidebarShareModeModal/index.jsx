@@ -6,6 +6,7 @@ import deleteCookie from "../../../utils/deleteCookie";
 import { SERVER_ADDRESS } from "../../../utils/env";
 import getCookie from "../../../utils/getCookie";
 import COLORS from "../../constants/COLORS";
+import { setShareKey } from "../../redux/reducers/shareKey";
 import { setUrlAddress } from "../../redux/reducers/urlAddress";
 
 const SidebarShareModeModalContainer = styled.div`
@@ -75,6 +76,7 @@ const SidebarShareModeModal = () => {
 
         scrapWindow.innerHTML = scrapContent.data.scrapContent.content;
 
+        dispatch(setShareKey(getCookie("shareModeKey")));
         dispatch(setUrlAddress(scrapContent.data.scrapContent.urlAddress));
         deleteCookie("shareModeKey");
       }
@@ -106,6 +108,7 @@ const SidebarShareModeModal = () => {
 
           copyKey.value = newScrapContent.data.id.toString();
 
+          dispatch(setShareKey(copyKey.value));
           copyKey.select();
           copyKey.setSelectionRange(0, 99999);
           document.execCommand("Copy");
@@ -122,11 +125,12 @@ const SidebarShareModeModal = () => {
         onClick={async () => {
           const scrapWindow = document.getElementById("scrapWindowContentBox");
           const scrapContent = await axios.get(
-            `${SERVER_ADDRESS}${keyInput}/scrapContent/`
+            `${SERVER_ADDRESS}/scrapContent/${keyInput}`
           );
 
           scrapWindow.innerHTML = scrapContent.data.scrapContent.content;
 
+          dispatch(setShareKey(keyInput));
           dispatch(setUrlAddress(scrapContent.data.scrapContent.urlAddress));
         }}
       >

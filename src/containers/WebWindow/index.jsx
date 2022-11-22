@@ -208,7 +208,10 @@ const WebWindow = () => {
 
       block.style.display = "none";
 
-      socketRef.current.emit("user-send", scrapWindow.innerHTML);
+      socketRef.current.emit("shareScrapContent", {
+        scrapContent: scrapWindow.innerHTML,
+        shareKey: shareKeyRef.current,
+      });
     };
 
     socketRef.current = io.connect(`${SERVER_ADDRESS}`);
