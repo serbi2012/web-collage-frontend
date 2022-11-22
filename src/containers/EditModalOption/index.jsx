@@ -27,7 +27,7 @@ const EditModalOption = ({ option, icon }) => {
     <EditModalOptionContainer>
       <span
         className="material-symbols-outlined"
-        onClick={() => {
+        onMouseDown={() => {
           document.execCommand(option);
         }}
       >

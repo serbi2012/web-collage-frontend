@@ -12,7 +12,6 @@ import THEME from "../../constants/THEME";
 import Drawing from "../Drawing";
 import EditModal from "../EditModeModal";
 import io from "socket.io-client";
-import getCookie from "../../../utils/getCookie";
 
 const ScrapWindowContainer = styled.div`
   display: flex;
@@ -187,13 +186,14 @@ const ScrapWindow = () => {
       if (event.target === scrapWindow || event.target === drawingCanvas)
         return;
 
-      selectedElement = event.target;
-      isDrag = true;
-
       if (selectedSidebarToolRef.current === "selectMode") {
+        isDrag = true;
+        selectedElement = event.target;
         selectedElement.style.position = "absolute";
-        selectedElement.style.top = `${event.clientY}px`;
+        selectedElement.style.top = `${event.clientY + 20}px`;
         selectedElement.style.left = `${event.clientX}px`;
+
+        scrapWindow.insertAdjacentElement("beforeend", selectedElement);
       }
     };
 
@@ -201,12 +201,12 @@ const ScrapWindow = () => {
       if (selectedSidebarToolRef.current === "selectMode") {
         if (!isDrag) return;
 
-        selectedElement.style.top = `${event.clientY}px`;
+        selectedElement.style.top = `${event.clientY + 20}px`;
         selectedElement.style.left = `${event.clientX}px`;
       } else if (selectedSidebarToolRef.current === "editMode") {
         if (
-          selectedElement.tagName === "IMG" ||
-          selectedElement.tagName === "VIDEO"
+          selectedElement?.tagName === "IMG" ||
+          selectedElement?.tagName === "VIDEO"
         ) {
           selectedElement.style.width = `${
             event.clientX - selectedElement.getBoundingClientRect().left
@@ -224,10 +224,14 @@ const ScrapWindow = () => {
         const boxes = document.getElementsByClassName("BoxComponent");
         const copiedBox = boxes[0].cloneNode(false);
 
-        selectedElement.style.top = `${event.clientY}px`;
+        selectedElement.style.top = `${event.clientY + 20}px`;
         selectedElement.style.left = `${event.clientX}px`;
 
         if (sidebarModeOptionRef.current === "BoxAndBlockMode") {
+          selectedElement.style.position = "relative";
+          selectedElement.style.removeProperty("top");
+          selectedElement.style.removeProperty("left");
+
           if (event.target === scrapWindow) {
             if (hasClass(selectedElement, "BoxComponent")) {
               scrapWindow.insertAdjacentElement("beforeend", selectedElement);
@@ -238,10 +242,6 @@ const ScrapWindow = () => {
           } else {
             event.target.insertAdjacentElement("beforeend", selectedElement);
           }
-
-          selectedElement.style.position = "relative";
-          selectedElement.style.removeProperty("top");
-          selectedElement.style.removeProperty("left");
         }
       }
 
@@ -283,9 +283,9 @@ const ScrapWindow = () => {
         className={`contentBox ${theme}`}
       >
         <Box className="BoxComponent"></Box>
-        <EditModal />
-        <Drawing />
       </div>
+      <EditModal />
+      <Drawing />
       <div ref={rightResizerRef} className="resizer-r"></div>
       <div
         className="ScrapWindow-fullscreen"
