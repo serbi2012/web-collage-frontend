@@ -186,9 +186,10 @@ const ScrapWindow = () => {
       if (event.target === scrapWindow || event.target === drawingCanvas)
         return;
 
+      isDrag = true;
+      selectedElement = event.target;
+
       if (selectedSidebarToolRef.current === "selectMode") {
-        isDrag = true;
-        selectedElement = event.target;
         selectedElement.style.position = "absolute";
         selectedElement.style.top = `${event.clientY + 20}px`;
         selectedElement.style.left = `${event.clientX}px`;
@@ -198,9 +199,9 @@ const ScrapWindow = () => {
     };
 
     const scrapWindowMousemove = (event) => {
-      if (selectedSidebarToolRef.current === "selectMode") {
-        if (!isDrag) return;
+      if (!isDrag) return;
 
+      if (selectedSidebarToolRef.current === "selectMode") {
         selectedElement.style.top = `${event.clientY + 20}px`;
         selectedElement.style.left = `${event.clientX}px`;
       } else if (selectedSidebarToolRef.current === "editMode") {

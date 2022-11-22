@@ -147,11 +147,20 @@ const SidebarBoxModeModal = () => {
       <div
         className="sidebarModeOption"
         onClick={() => {
-          const boxes = document.getElementsByClassName("BoxComponent");
+          const box = document.createElement("div");
           const scrapWindow = document.getElementById("scrapWindowContentBox");
-          const copiedBox = boxes[0].cloneNode(false);
 
-          scrapWindow.insertAdjacentElement("beforeend", copiedBox);
+          box.style.display = "flex";
+          box.style.justifyContent = "flex-start";
+          box.style.alignItems = "center";
+          box.style.flexDirection = "column";
+          box.style.margin = "5px 0";
+          box.style.padding = "10px";
+          box.style.width = "500px";
+          box.style.boxShadow = "0 0 0 2px #ccc";
+
+          box.classList.add("BoxComponent");
+          scrapWindow.insertAdjacentElement("beforeend", box);
         }}
       >
         Add Box
