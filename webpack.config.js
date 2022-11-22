@@ -42,11 +42,11 @@ const options = {
     main: path.join(__dirname, "src", "pages", "Main", "index.jsx"),
   },
   chromeExtensionBoilerplate: {
-    notHotReload: ["contentScript", "devtools"],
+    notHotReload: ["background", "contentScript", "devtools"],
   },
   output: {
-    path: path.resolve(__dirname, "build"),
     filename: "[name].bundle.js",
+    path: path.resolve(__dirname, "build"),
     clean: true,
     publicPath: ASSET_PATH,
   },
@@ -54,6 +54,7 @@ const options = {
     rules: [
       {
         test: /\.(css|scss)$/,
+
         use: [
           {
             loader: "style-loader",
@@ -71,10 +72,7 @@ const options = {
       },
       {
         test: new RegExp(".(" + fileExtensions.join("|") + ")$"),
-        loader: "file-loader",
-        options: {
-          name: "[name].[ext]",
-        },
+        type: "asset/resource",
         exclude: /node_modules/,
       },
       {
@@ -137,6 +135,24 @@ const options = {
         },
       ],
     }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: "src/assets/img/icon-128.png",
+          to: path.join(__dirname, "build"),
+          force: true,
+        },
+      ],
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: "src/assets/img/icon-34.png",
+          to: path.join(__dirname, "build"),
+          force: true,
+        },
+      ],
+    }),
     new HtmlWebpackPlugin({
       template: path.join(__dirname, "src", "pages", "Options", "index.html"),
       filename: "options.html",
@@ -149,18 +165,7 @@ const options = {
       chunks: ["popup"],
       cache: false,
     }),
-    new HtmlWebpackPlugin({
-      template: path.join(
-        __dirname,
-        "src",
-        "pages",
-        "Background",
-        "index.html"
-      ),
-      filename: "background.html",
-      chunks: ["background"],
-      cache: false,
-    }),
+
     new HtmlWebpackPlugin({
       template: path.join(__dirname, "src", "pages", "Main", "index.html"),
       filename: "main.html",
@@ -174,7 +179,7 @@ const options = {
 };
 
 if (env.NODE_ENV === "development") {
-  options.devtool = "eval-cheap-module-source-map";
+  options.devtool = "cheap-module-source-map";
 } else {
   options.optimization = {
     minimize: true,
