@@ -105,7 +105,9 @@ const WebWindow = () => {
   const webWindowRef = useRef(null);
   const isScrapModeRef = useRef(false);
   const socketRef = useRef(null);
+  const shareKeyRef = useRef(null);
 
+  const { shareKey } = useSelector(({ shareKey }) => shareKey);
   const { urlAddress } = useSelector(({ urlAddress }) => urlAddress);
 
   const [iframeDom, setIframeDom] = useState(null);
@@ -118,6 +120,10 @@ const WebWindow = () => {
   useEffect(() => {
     isScrapModeRef.current = isScrapMode;
   }, [isScrapMode]);
+
+  useEffect(() => {
+    shareKeyRef.current = shareKey;
+  }, [shareKey]);
 
   useEffect(() => {
     const webWindow = webWindowRef.current;
@@ -188,7 +194,10 @@ const WebWindow = () => {
 
           block.style.display = "none";
 
-          socketRef.current.emit("user-send", scrapWindow.innerHTML);
+          socketRef.current.emit("shareScrapContent", {
+            scrapContent: scrapWindow.innerHTML,
+            shareKey: shareKeyRef.current,
+          });
 
           return;
         }
@@ -208,7 +217,10 @@ const WebWindow = () => {
 
       block.style.display = "none";
 
-      socketRef.current.emit("user-send", scrapWindow.innerHTML);
+      socketRef.current.emit("shareScrapContent", {
+        scrapContent: scrapWindow.innerHTML,
+        shareKey: shareKeyRef.current,
+      });
     };
 
     socketRef.current = io.connect(`${SERVER_ADDRESS}`);
@@ -224,7 +236,7 @@ const WebWindow = () => {
 
       if (getCookie("shareModeKey")) {
         const scrapContent = await axios.get(
-          `${SERVER_ADDRESS}${getCookie("shareModeKey")}/shareMode`
+          `${SERVER_ADDRESS}/scrapContent/${getCookie("shareModeKey")}/`
         );
 
         url = scrapContent.data.scrapContent.urlAddress;
@@ -237,7 +249,7 @@ const WebWindow = () => {
 
       const sourceDomain = url.slice(`https://`.length).split("/").shift();
       const { data } = await axios.get(url);
-      const htmlString = await axios.post(`${SERVER_ADDRESS}`, {
+      const htmlString = await axios.post(`${SERVER_ADDRESS}/htmlString/`, {
         originalHtml: data,
         sourceDomain,
       });

@@ -1,12 +1,17 @@
 import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
+import { io } from "socket.io-client";
 import {
-  drawLineWithPen,
-  drawLineWithHighlighter,
-  drawLineWithEraser,
+  drawPen,
+  drawHighlighter,
+  drawEraser,
+  drawPenWithEmit,
+  drawHighlighterWithEmit,
+  drawEraserWithEmit,
 } from "../../../utils/drawLine";
 import isMouseOn from "../../../utils/isMouseOn";
+import { SERVER_ADDRESS } from "../../../utils/env";
 
 const DrawingContainer = styled.div`
   canvas {
@@ -24,7 +29,10 @@ const Drawing = () => {
   const lineOpacityRef = useRef(null);
   const lineWidthRef = useRef(null);
   const lineColorRef = useRef(null);
+  const socketRef = useRef(null);
+  const shareKeyRef = useRef(null);
 
+  const { shareKey } = useSelector(({ shareKey }) => shareKey);
   const { lineColor, lineWidth, lineOpacity } = useSelector(
     ({ lineStyle }) => lineStyle
   );
@@ -35,6 +43,10 @@ const Drawing = () => {
   const { sidebarModeOption } = useSelector(
     ({ sidebarModeOption }) => sidebarModeOption
   );
+
+  useEffect(() => {
+    shareKeyRef.current = shareKey;
+  }, [shareKey]);
 
   useEffect(() => {
     selectedSidebarToolRef.current = selectedSidebarTool;
@@ -86,33 +98,38 @@ const Drawing = () => {
       }
 
       if (sidebarModeOptionRef.current === "Pen") {
-        drawLineWithPen(
+        drawPenWithEmit(
           context,
           startPosition,
           [event.clientX, event.clientY],
           lineColorRef.current,
-          lineWidthRef.current
+          lineWidthRef.current,
+          socketRef,
+          canvas
         );
 
         startPosition = [event.clientX, event.clientY];
       } else if (sidebarModeOptionRef.current === "Highlighter") {
-        drawLineWithHighlighter(
+        drawHighlighterWithEmit(
           context,
           startPosition,
           [event.clientX, highlighterEndPosition],
           lineColorRef.current,
           lineWidthRef.current,
-          lineOpacityRef.current
+          lineOpacityRef.current,
+          socketRef,
+          canvas
         );
 
         startPosition = [event.clientX, startPosition[1]];
       } else if (sidebarModeOptionRef.current === "Eraser") {
-        drawLineWithEraser(
+        drawEraserWithEmit(
           context,
           startPosition,
           [event.clientX, event.clientY],
-          lineColorRef.current,
-          lineWidthRef.current
+          lineWidthRef.current,
+          socketRef,
+          canvas
         );
 
         startPosition = [event.clientX, event.clientY];
@@ -127,28 +144,33 @@ const Drawing = () => {
       drawing = false;
 
       if (sidebarModeOptionRef.current === "Pen") {
-        drawLineWithPen(
+        drawPenWithEmit(
           context,
           startPosition,
           [event.clientX, event.clientY],
           lineColorRef.current,
-          lineWidthRef.current
+          lineWidthRef.current,
+          socketRef,
+          canvas
         );
       } else if (sidebarModeOptionRef.current === "Highlighter") {
-        drawLineWithHighlighter(
+        drawHighlighterWithEmit(
           context,
           startPosition,
           [event.clientX, highlighterEndPosition],
           lineColorRef.current,
-          lineWidthRef.current
+          lineWidthRef.current,
+          socketRef,
+          canvas
         );
       } else if (sidebarModeOptionRef.current === "Eraser") {
-        drawLineWithEraser(
+        drawEraserWithEmit(
           context,
           startPosition,
           [event.clientX, event.clientY],
-          lineColorRef.current,
-          lineWidthRef.current
+          lineWidthRef.current,
+          socketRef,
+          canvas
         );
       }
     };
@@ -165,6 +187,57 @@ const Drawing = () => {
 
     scrapWindow.addEventListener("change", onResize, false);
     onResize();
+
+    const onDrawingEvent = (data) => {
+      if (data.startPosition) {
+        if (data.type === "pen") {
+          drawPen(
+            context,
+            [
+              data.startPosition[0] * canvas.width,
+              data.startPosition[1] * canvas.height,
+            ],
+            [
+              data.endPosition[0] * canvas.width,
+              data.endPosition[1] * canvas.height,
+            ],
+            data.color,
+            data.width
+          );
+        } else if (data.type === "highlighter") {
+          drawHighlighter(
+            context,
+            [
+              data.startPosition[0] * canvas.width,
+              data.startPosition[1] * canvas.height,
+            ],
+            [
+              data.endPosition[0] * canvas.width,
+              data.endPosition[1] * canvas.height,
+            ],
+            data.color,
+            data.width,
+            data.opacity
+          );
+        } else if (data.type === "eraser") {
+          drawEraser(
+            context,
+            [
+              data.startPosition[0] * canvas.width,
+              data.startPosition[1] * canvas.height,
+            ],
+            [
+              data.endPosition[0] * canvas.width,
+              data.endPosition[1] * canvas.height,
+            ],
+            data.width
+          );
+        }
+      }
+    };
+
+    socketRef.current = io.connect(`${SERVER_ADDRESS}`);
+    socketRef.current.on("shareScrapContent", onDrawingEvent);
   }, []);
 
   return (
