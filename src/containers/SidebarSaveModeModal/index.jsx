@@ -65,9 +65,7 @@ const SidebarSaveModeModal = () => {
       <h3>Save Mode</h3>
       <ReactToPrint
         trigger={() => (
-          <div className="sidebarModeOption" onClick={() => {}}>
-            Save Scrap Window
-          </div>
+          <div className="sidebarModeOption">Save Scrap Window</div>
         )}
         content={() => document.getElementById("scrapWindowContentBox")}
       />

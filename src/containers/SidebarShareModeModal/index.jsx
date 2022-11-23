@@ -66,6 +66,40 @@ const SidebarShareModeModal = () => {
 
   const dispatch = useDispatch();
 
+  const createShareKeyOnClick = async () => {
+    const scrapWindow = document.getElementById("scrapWindowContentBox");
+    const copyKey = document.getElementById("shareKeyInput");
+
+    const newScrapContent = await axios.post(
+      `${SERVER_ADDRESS}/scrapContent/`,
+      {
+        content: scrapWindow.innerHTML,
+        urlAddress,
+      }
+    );
+
+    copyKey.value = newScrapContent.data.id.toString();
+
+    dispatch(setShareKey(copyKey.value));
+    copyKey.select();
+    copyKey.setSelectionRange(0, 99999);
+    document.execCommand("Copy");
+    alert("Key가 성공적으로 생성되었습니다.");
+    copyUrlFnc();
+  };
+
+  const connectKeyOnClick = async () => {
+    const scrapWindow = document.getElementById("scrapWindowContentBox");
+    const scrapContent = await axios.get(
+      `${SERVER_ADDRESS}/scrapContent/${keyInput}`
+    );
+
+    scrapWindow.innerHTML = scrapContent.data.scrapContent.content;
+
+    dispatch(setShareKey(keyInput));
+    dispatch(setUrlAddress(scrapContent.data.scrapContent.urlAddress));
+  };
+
   useEffect(() => {
     (async () => {
       if (getCookie("shareModeKey")) {
@@ -92,48 +126,12 @@ const SidebarShareModeModal = () => {
       }}
     >
       <h3>Share Mode</h3>
-      <div
-        className="sidebarModeOption"
-        onClick={async () => {
-          const scrapWindow = document.getElementById("scrapWindowContentBox");
-          const copyKey = document.getElementById("shareKeyInput");
-
-          const newScrapContent = await axios.post(
-            `${SERVER_ADDRESS}/scrapContent/`,
-            {
-              content: scrapWindow.innerHTML,
-              urlAddress,
-            }
-          );
-
-          copyKey.value = newScrapContent.data.id.toString();
-
-          dispatch(setShareKey(copyKey.value));
-          copyKey.select();
-          copyKey.setSelectionRange(0, 99999);
-          document.execCommand("Copy");
-          alert("Key가 성공적으로 생성되었습니다.");
-          copyUrlFnc();
-        }}
-      >
-        Create Link
+      <div className="sidebarModeOption" onClick={createShareKeyOnClick}>
+        Create Key
       </div>
       <input id="shareKeyInput" />
       <hr />
-      <div
-        className="sidebarModeOption"
-        onClick={async () => {
-          const scrapWindow = document.getElementById("scrapWindowContentBox");
-          const scrapContent = await axios.get(
-            `${SERVER_ADDRESS}/scrapContent/${keyInput}`
-          );
-
-          scrapWindow.innerHTML = scrapContent.data.scrapContent.content;
-
-          dispatch(setShareKey(keyInput));
-          dispatch(setUrlAddress(scrapContent.data.scrapContent.urlAddress));
-        }}
-      >
+      <div className="sidebarModeOption" onClick={connectKeyOnClick}>
         Connect
       </div>
       <input

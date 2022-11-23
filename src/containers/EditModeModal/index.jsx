@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import COLORS from "../../constants/COLORS";
@@ -45,6 +45,11 @@ const EditModal = () => {
   const [fontSize, setFontSize] = useState(null);
   const [fontName, setFontName] = useState(null);
 
+  const changeFontOption = (event, option) => {
+    setFontName(event.target.value);
+    document.execCommand(option, false, event.target.value);
+  };
+
   return (
     <EditModalContainer
       id="editModal"
@@ -57,9 +62,8 @@ const EditModal = () => {
         name="fontType"
         id="fontType"
         value={fontName}
-        onChange={(event) => {
-          setFontName(event.target.value);
-          document.execCommand("fontName", false, event.target.value);
+        onChange={() => {
+          changeFontOption(event, "fontName");
         }}
       >
         <option value="monospace">Monospace</option>
@@ -72,9 +76,8 @@ const EditModal = () => {
         name="fontSize"
         id="fontSize"
         value={fontSize}
-        onChange={(event) => {
-          setFontSize(event.target.value);
-          document.execCommand("fontSize", false, event.target.value);
+        onChange={() => {
+          changeFontOption(event, "fontSize");
         }}
       >
         <option value="1">10</option>

@@ -13,7 +13,7 @@ import {
 import isMouseOn from "../../../utils/isMouseOn";
 import { SERVER_ADDRESS } from "../../../utils/env";
 
-const DrawingContainer = styled.div`
+const DrawingCanvasContainer = styled.div`
   canvas {
     position: absolute;
     top: 0;
@@ -22,7 +22,7 @@ const DrawingContainer = styled.div`
   }
 `;
 
-const Drawing = () => {
+const DrawingCanvas = () => {
   const selectedSidebarToolRef = useRef(false);
   const sidebarModeOptionRef = useRef(null);
   const canvasRef = useRef(null);
@@ -75,7 +75,7 @@ const Drawing = () => {
     const sidebar = document.getElementById("sidebar");
     const drawingModeModal = document.getElementById("drawingModeModal");
 
-    let drawing = false;
+    let isDrawing = false;
     let highlighterEndPosition;
     let startPosition;
 
@@ -87,17 +87,17 @@ const Drawing = () => {
       )
         return;
 
-      drawing = true;
+      isDrawing = true;
       startPosition = [event.clientX, event.clientY];
       highlighterEndPosition = event.clientY;
     };
 
     const onMouseMove = (event) => {
-      if (!drawing) {
+      if (!isDrawing) {
         return;
       }
 
-      if (sidebarModeOptionRef.current === "Pen") {
+      if (sidebarModeOptionRef.current === "pen") {
         drawPenWithEmit(
           context,
           startPosition,
@@ -109,7 +109,7 @@ const Drawing = () => {
         );
 
         startPosition = [event.clientX, event.clientY];
-      } else if (sidebarModeOptionRef.current === "Highlighter") {
+      } else if (sidebarModeOptionRef.current === "highlighter") {
         drawHighlighterWithEmit(
           context,
           startPosition,
@@ -122,7 +122,7 @@ const Drawing = () => {
         );
 
         startPosition = [event.clientX, startPosition[1]];
-      } else if (sidebarModeOptionRef.current === "Eraser") {
+      } else if (sidebarModeOptionRef.current === "eraser") {
         drawEraserWithEmit(
           context,
           startPosition,
@@ -137,13 +137,13 @@ const Drawing = () => {
     };
 
     const onMouseUp = (event) => {
-      if (!drawing) {
+      if (!isDrawing) {
         return;
       }
 
-      drawing = false;
+      isDrawing = false;
 
-      if (sidebarModeOptionRef.current === "Pen") {
+      if (sidebarModeOptionRef.current === "pen") {
         drawPenWithEmit(
           context,
           startPosition,
@@ -153,7 +153,7 @@ const Drawing = () => {
           socketRef,
           canvas
         );
-      } else if (sidebarModeOptionRef.current === "Highlighter") {
+      } else if (sidebarModeOptionRef.current === "highlighter") {
         drawHighlighterWithEmit(
           context,
           startPosition,
@@ -163,7 +163,7 @@ const Drawing = () => {
           socketRef,
           canvas
         );
-      } else if (sidebarModeOptionRef.current === "Eraser") {
+      } else if (sidebarModeOptionRef.current === "eraser") {
         drawEraserWithEmit(
           context,
           startPosition,
@@ -241,7 +241,7 @@ const Drawing = () => {
   }, []);
 
   return (
-    <DrawingContainer>
+    <DrawingCanvasContainer>
       <canvas
         ref={canvasRef}
         id="drawingCanvas"
@@ -249,8 +249,8 @@ const Drawing = () => {
           zIndex: selectedSidebarTool === "drawingMode" ? "1" : "-1",
         }}
       />
-    </DrawingContainer>
+    </DrawingCanvasContainer>
   );
 };
 
-export default Drawing;
+export default DrawingCanvas;

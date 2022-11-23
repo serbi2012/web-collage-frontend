@@ -54,6 +54,11 @@ const SidebarSelectModeModal = () => {
 
   const dispatch = useDispatch();
 
+  const changeSelectModeOnClick = (mode) => {
+    dispatch(changeSidebarModeOption(`${mode}Mode`));
+    setSelectedMode(mode);
+  };
+
   return (
     <SidebarSelectModeModalContainer
       style={{
@@ -65,22 +70,20 @@ const SidebarSelectModeModal = () => {
       <h3>Select Mode</h3>
       <div
         className={`sidebarModeOption ${
-          selectedMode === "boxAndBlock" && "selected"
+          selectedMode === "BoxAndBlock" && "selected"
         }`}
         onClick={() => {
-          dispatch(changeSidebarModeOption("BoxAndBlockMode"));
-          setSelectedMode("boxAndBlock");
+          changeSelectModeOnClick("BoxAndBlock");
         }}
       >
         Box & Block
       </div>
       <div
         className={`sidebarModeOption ${
-          selectedMode === "freePosition" && "selected"
+          selectedMode === "FreePosition" && "selected"
         }`}
         onClick={() => {
-          dispatch(changeSidebarModeOption("FreePositionMode"));
-          setSelectedMode("freePosition");
+          changeSelectModeOnClick("FreePosition");
         }}
       >
         Free Position
