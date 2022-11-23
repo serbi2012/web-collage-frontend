@@ -42,13 +42,11 @@ const SidebarTool = ({ icon, mode }) => {
     <SidebarToolContainer
       className={selectedSidebarTool === mode && "Sidebar-selectedTool"}
       onClick={() => {
-        if (selectedSidebarTool === mode) {
-          dispatch(selectSidebarTool(mode));
-          dispatch(toggleModalOpen(!isSidebarModalOpen));
-        } else {
-          dispatch(selectSidebarTool(mode));
-          dispatch(toggleModalOpen(true));
-        }
+        dispatch(selectSidebarTool(mode));
+
+        selectedSidebarTool === mode
+          ? dispatch(toggleModalOpen(!isSidebarModalOpen))
+          : dispatch(toggleModalOpen(true));
       }}
     >
       <span className="material-symbols-outlined">{icon}</span>

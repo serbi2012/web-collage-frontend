@@ -261,6 +261,20 @@ const WebWindow = () => {
 
       setIframeDom(htmlString.data.htmlString);
     })();
+
+    return () => {
+      webWindowContent.removeEventListener(
+        "mouseover",
+        webWindowContentMouseover
+      );
+      webWindowContent.removeEventListener(
+        "mouseout",
+        webWindowContentMouseout
+      );
+      webWindow.removeEventListener("mousedown", webWindowMousedown);
+      window.removeEventListener("mousemove", windowMousemove);
+      window.removeEventListener("mouseup", windowMouseup);
+    };
   }, [urlAddress]);
 
   return (

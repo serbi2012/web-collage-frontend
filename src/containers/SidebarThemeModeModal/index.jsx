@@ -125,7 +125,7 @@ const SidebarThemeModeModal = () => {
       <div className="scrapWindowWidthBox">
         <div
           className="sidebarModeOption"
-          onClick={() => {
+          onMouseDown={() => {
             if (scrapWindowWidth > 300) {
               const boxes = document.getElementsByClassName("BoxComponent");
 
@@ -142,7 +142,7 @@ const SidebarThemeModeModal = () => {
         {scrapWindowWidth}px
         <div
           className="sidebarModeOption"
-          onClick={() => {
+          onMouseDown={() => {
             if (scrapWindowWidth < 1000) {
               const boxes = document.getElementsByClassName("BoxComponent");
 
@@ -162,7 +162,7 @@ const SidebarThemeModeModal = () => {
       <div className="themeBox">
         <div
           className="theme light"
-          onClick={() => {
+          onMouseDown={() => {
             const boxes = document.getElementsByClassName("BoxComponent");
 
             for (let i = 0; i < boxes.length; i++) {
@@ -174,7 +174,7 @@ const SidebarThemeModeModal = () => {
         />
         <div
           className="theme dark"
-          onClick={() => {
+          onMouseDown={() => {
             const boxes = document.getElementsByClassName("BoxComponent");
 
             for (let i = 0; i < boxes.length; i++) {
@@ -186,7 +186,7 @@ const SidebarThemeModeModal = () => {
         />
         <div
           className="theme brown"
-          onClick={() => {
+          onMouseDown={() => {
             const boxes = document.getElementsByClassName("BoxComponent");
 
             for (let i = 0; i < boxes.length; i++) {
@@ -198,7 +198,7 @@ const SidebarThemeModeModal = () => {
         />
         <div
           className="theme blue"
-          onClick={() => {
+          onMouseDown={() => {
             const boxes = document.getElementsByClassName("BoxComponent");
 
             for (let i = 0; i < boxes.length; i++) {
@@ -210,7 +210,7 @@ const SidebarThemeModeModal = () => {
         />
         <div
           className="theme skyblue"
-          onClick={() => {
+          onMouseDown={() => {
             const boxes = document.getElementsByClassName("BoxComponent");
 
             for (let i = 0; i < boxes.length; i++) {
@@ -222,7 +222,7 @@ const SidebarThemeModeModal = () => {
         />
         <div
           className="theme green"
-          onClick={() => {
+          onMouseDown={() => {
             const boxes = document.getElementsByClassName("BoxComponent");
 
             for (let i = 0; i < boxes.length; i++) {

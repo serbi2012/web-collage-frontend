@@ -116,6 +116,7 @@ const AddressBarBox = ({
             .slice(`https://`.length)
             .split("/")
             .shift();
+
           const { data } = await axios.get(urlAddress);
           const htmlString = await axios.post(`${SERVER_ADDRESS}/htmlString`, {
             originalHtml: data,

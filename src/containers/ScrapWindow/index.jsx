@@ -291,6 +291,15 @@ const ScrapWindow = () => {
     scrapWindow.addEventListener("mousedown", scrapWindowMousedown);
     scrapWindow.addEventListener("mousemove", scrapWindowMousemove);
     scrapWindow.addEventListener("mouseup", scrapWindowMouseup);
+
+    return () => {
+      resizerRight.removeEventListener("mousedown", onClickRightResize);
+      scrapWindow.removeEventListener("mouseover", scrapWindowContentMouseover);
+      scrapWindow.removeEventListener("mouseout", scrapWindowContentMouseout);
+      scrapWindow.removeEventListener("mousedown", scrapWindowMousedown);
+      scrapWindow.removeEventListener("mousemove", scrapWindowMousemove);
+      scrapWindow.removeEventListener("mouseup", scrapWindowMouseup);
+    };
   }, []);
 
   return (

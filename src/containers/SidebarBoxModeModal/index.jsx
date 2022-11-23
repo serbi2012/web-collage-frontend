@@ -132,7 +132,9 @@ const SidebarBoxModeModal = () => {
     const scrapWindow = document.getElementById("scrapWindowContentBox");
 
     scrapWindow.addEventListener("mousedown", (event) => {
-      setSelectedElement(event.target);
+      if (event.target !== scrapWindow) {
+        setSelectedElement(event.target);
+      }
     });
   }, []);
 
