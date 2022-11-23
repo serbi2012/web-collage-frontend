@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 import COLORS from "../../constants/COLORS";
 import THEME from "../../constants/THEME";
-import { setTheme } from "../../redux/reducers/theme";
+import ThemeOption from "../ThemeOption";
 
 const SidebarThemeModeModalContainer = styled.div`
   position: absolute;
@@ -59,40 +59,6 @@ const SidebarThemeModeModalContainer = styled.div`
     align-items: center;
     flex-wrap: wrap;
     width: 200px;
-
-    .theme {
-      margin: 5px;
-      height: 50px;
-      width: 50px;
-      border: 2px solid ${COLORS.MAIN_COLOR};
-      border-radius: 5px;
-      user-select: none;
-      cursor: pointer;
-    }
-
-    .light {
-      background-color: white;
-    }
-
-    .dark {
-      background-color: ${THEME.DARK.BACKGROUND_COLOR};
-    }
-
-    .brown {
-      background-color: ${THEME.BROWN.BACKGROUND_COLOR};
-    }
-
-    .blue {
-      background-color: ${THEME.BLUE.BACKGROUND_COLOR};
-    }
-
-    .skyblue {
-      background-color: ${THEME.SKY_BLUE.BACKGROUND_COLOR};
-    }
-
-    .green {
-      background-color: ${THEME.GREEN.BACKGROUND_COLOR};
-    }
   }
 
   .selected {
@@ -108,9 +74,29 @@ const SidebarThemeModeModal = () => {
 
   const [scrapWindowWidth, setScrapWindowWidth] = useState(500);
 
-  const dispatch = useDispatch();
+  const reduceWidthMouseDown = () => {
+    if (scrapWindowWidth > 300) {
+      const boxes = document.getElementsByClassName("BoxComponent");
 
-  const { DARK, BROWN, BLUE, SKY_BLUE, GREEN } = THEME;
+      for (let i = 0; i < boxes.length; i++) {
+        boxes[i].style.width = `${scrapWindowWidth - 100}px`;
+      }
+
+      setScrapWindowWidth(scrapWindowWidth - 100);
+    }
+  };
+
+  const increaseWidthMouseDown = () => {
+    if (scrapWindowWidth < 1000) {
+      const boxes = document.getElementsByClassName("BoxComponent");
+
+      for (let i = 0; i < boxes.length; i++) {
+        boxes[i].style.width = `${scrapWindowWidth + 100}px`;
+      }
+
+      setScrapWindowWidth(scrapWindowWidth + 100);
+    }
+  };
 
   return (
     <SidebarThemeModeModalContainer
@@ -123,115 +109,20 @@ const SidebarThemeModeModal = () => {
       <h3>Theme Mode</h3>
       <h5>Width</h5>
       <div className="scrapWindowWidthBox">
-        <div
-          className="sidebarModeOption"
-          onMouseDown={() => {
-            if (scrapWindowWidth > 300) {
-              const boxes = document.getElementsByClassName("BoxComponent");
-
-              for (let i = 0; i < boxes.length; i++) {
-                boxes[i].style.width = `${scrapWindowWidth - 100}px`;
-              }
-
-              setScrapWindowWidth(scrapWindowWidth - 100);
-            }
-          }}
-        >
+        <div className="sidebarModeOption" onMouseDown={reduceWidthMouseDown}>
           -
         </div>
         {scrapWindowWidth}px
-        <div
-          className="sidebarModeOption"
-          onMouseDown={() => {
-            if (scrapWindowWidth < 1000) {
-              const boxes = document.getElementsByClassName("BoxComponent");
-
-              for (let i = 0; i < boxes.length; i++) {
-                boxes[i].style.width = `${scrapWindowWidth + 100}px`;
-              }
-
-              setScrapWindowWidth(scrapWindowWidth + 100);
-            }
-          }}
-        >
+        <div className="sidebarModeOption" onMouseDown={increaseWidthMouseDown}>
           +
         </div>
       </div>
       <hr />
       <h5>Theme</h5>
       <div className="themeBox">
-        <div
-          className="theme light"
-          onMouseDown={() => {
-            const boxes = document.getElementsByClassName("BoxComponent");
-
-            for (let i = 0; i < boxes.length; i++) {
-              boxes[i].style.boxShadow = "0 0 0 2px #ccc";
-            }
-
-            dispatch(setTheme("theme-light"));
-          }}
-        />
-        <div
-          className="theme dark"
-          onMouseDown={() => {
-            const boxes = document.getElementsByClassName("BoxComponent");
-
-            for (let i = 0; i < boxes.length; i++) {
-              boxes[i].style.boxShadow = `0 0 0 2px ${DARK.BOX_BORDER}`;
-            }
-
-            dispatch(setTheme("theme-dark"));
-          }}
-        />
-        <div
-          className="theme brown"
-          onMouseDown={() => {
-            const boxes = document.getElementsByClassName("BoxComponent");
-
-            for (let i = 0; i < boxes.length; i++) {
-              boxes[i].style.boxShadow = `0 0 0 2px ${BROWN.BOX_BORDER}`;
-            }
-
-            dispatch(setTheme("theme-brown"));
-          }}
-        />
-        <div
-          className="theme blue"
-          onMouseDown={() => {
-            const boxes = document.getElementsByClassName("BoxComponent");
-
-            for (let i = 0; i < boxes.length; i++) {
-              boxes[i].style.boxShadow = `0 0 0 2px ${BLUE.BOX_BORDER}`;
-            }
-
-            dispatch(setTheme("theme-blue"));
-          }}
-        />
-        <div
-          className="theme skyblue"
-          onMouseDown={() => {
-            const boxes = document.getElementsByClassName("BoxComponent");
-
-            for (let i = 0; i < boxes.length; i++) {
-              boxes[i].style.boxShadow = `0 0 0 2px ${SKY_BLUE.BOX_BORDER}`;
-            }
-
-            dispatch(setTheme("theme-skyblue"));
-          }}
-        />
-        <div
-          className="theme green"
-          onMouseDown={() => {
-            const boxes = document.getElementsByClassName("BoxComponent");
-
-            for (let i = 0; i < boxes.length; i++) {
-              boxes[i].style.boxShadow = `0 0 0 2px ${GREEN.BOX_BORDER}`;
-            }
-
-            dispatch(setTheme("theme-green"));
-          }}
-        />
+        {Object.values(THEME).map((value, index) => {
+          return <ThemeOption theme={value} />;
+        })}
       </div>
     </SidebarThemeModeModalContainer>
   );

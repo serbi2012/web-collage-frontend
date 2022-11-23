@@ -1,5 +1,6 @@
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import lineStyle from "./reducers/lineStyle";
+import selectedElement from "./reducers/selectedElement";
 import selectedSidebarTool from "./reducers/selectedSidebarTool";
 import shareKey from "./reducers/shareKey";
 import sidebarModeOption from "./reducers/sidebarModeOption";
@@ -15,6 +16,7 @@ const store = configureStore({
     lineStyle: lineStyle,
     theme: theme,
     shareKey: shareKey,
+    selectedElement: selectedElement,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

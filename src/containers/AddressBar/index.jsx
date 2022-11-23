@@ -93,6 +93,24 @@ const AddressBarBox = ({
 
   const dispatch = useDispatch();
 
+  const connectToUrlAddressOnClick = async () => {
+    const sourceDomain = urlAddress.slice(`https://`.length).split("/").shift();
+
+    const { data } = await axios.get(urlAddress);
+    const htmlString = await axios.post(`${SERVER_ADDRESS}/htmlString`, {
+      originalHtml: data,
+      sourceDomain,
+    });
+
+    dispatch(setUrlAddress(urlAddressInput));
+
+    if (getCookie("urlAddress")) {
+      deleteCookie("urlAddress");
+    }
+
+    setIframeDom(htmlString.data.htmlString);
+  };
+
   return (
     <AddressBarBoxContainer
       style={{
@@ -111,26 +129,7 @@ const AddressBarBox = ({
       />
       <span
         className="material-symbols-outlined AddressBar-changeUrlButton"
-        onClick={async () => {
-          const sourceDomain = urlAddress
-            .slice(`https://`.length)
-            .split("/")
-            .shift();
-
-          const { data } = await axios.get(urlAddress);
-          const htmlString = await axios.post(`${SERVER_ADDRESS}/htmlString`, {
-            originalHtml: data,
-            sourceDomain,
-          });
-
-          dispatch(setUrlAddress(urlAddressInput));
-
-          if (getCookie("urlAddress")) {
-            deleteCookie("urlAddress");
-          }
-
-          setIframeDom(htmlString.data.htmlString);
-        }}
+        onClick={connectToUrlAddressOnClick}
       >
         arrow_forward
       </span>

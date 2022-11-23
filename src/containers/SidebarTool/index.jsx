@@ -38,16 +38,18 @@ const SidebarTool = ({ icon, mode }) => {
 
   const dispatch = useDispatch();
 
+  const changeSidebarToolOnClick = () => {
+    dispatch(selectSidebarTool(mode));
+
+    selectedSidebarTool === mode
+      ? dispatch(toggleModalOpen(!isSidebarModalOpen))
+      : dispatch(toggleModalOpen(true));
+  };
+
   return (
     <SidebarToolContainer
       className={selectedSidebarTool === mode && "Sidebar-selectedTool"}
-      onClick={() => {
-        dispatch(selectSidebarTool(mode));
-
-        selectedSidebarTool === mode
-          ? dispatch(toggleModalOpen(!isSidebarModalOpen))
-          : dispatch(toggleModalOpen(true));
-      }}
+      onClick={changeSidebarToolOnClick}
     >
       <span className="material-symbols-outlined">{icon}</span>
     </SidebarToolContainer>

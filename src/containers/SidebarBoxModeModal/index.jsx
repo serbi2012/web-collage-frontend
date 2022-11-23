@@ -3,6 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import hasClass from "../../../utils/hasClass";
 import COLORS from "../../constants/COLORS";
+import SORT_BOX_OPTION from "../../constants/SORT_BOX_OPTION";
+import { setSelectedElement } from "../../redux/reducers/selectedElement";
+import SortBoxOption from "../SortBoxOption";
 
 const SidebarBoxModeModalContainer = styled.div`
   position: absolute;
@@ -125,15 +128,51 @@ const SidebarBoxModeModal = () => {
     ({ selectedSidebarTool }) => selectedSidebarTool
   );
 
-  const [selectedElement, setSelectedElement] = useState(null);
+  const { selectedElement } = useSelector(
+    ({ selectedElement }) => selectedElement
+  );
+
   const [isBoxBorder, setIsBoxBorder] = useState(true);
+
+  const dispatch = useDispatch();
+
+  const addBoxOnClick = () => {
+    const box = document.createElement("div");
+    const scrapWindow = document.getElementById("scrapWindowContentBox");
+
+    box.style.display = "flex";
+    box.style.justifyContent = "flex-start";
+    box.style.alignItems = "center";
+    box.style.flexDirection = "column";
+    box.style.margin = "5px 0";
+    box.style.padding = "10px";
+    box.style.width = "500px";
+    box.style.boxShadow = "0 0 0 2px #ccc";
+
+    box.classList.add("BoxComponent");
+    scrapWindow.insertAdjacentElement("beforeend", box);
+  };
+
+  const toggleBoxBorderOnClick = () => {
+    const boxes = document.getElementsByClassName("BoxComponent");
+
+    for (let i = 0; i < boxes.length; i++) {
+      if (isBoxBorder) {
+        boxes[i].style.boxShadow = "none";
+      } else {
+        boxes[i].style.boxShadow = "0 0 0 2px #ccc";
+      }
+    }
+
+    setIsBoxBorder(!isBoxBorder);
+  };
 
   useEffect(() => {
     const scrapWindow = document.getElementById("scrapWindowContentBox");
 
     scrapWindow.addEventListener("mousedown", (event) => {
       if (event.target !== scrapWindow) {
-        setSelectedElement(event.target);
+        dispatch(setSelectedElement(event.target));
       }
     });
   }, []);
@@ -146,25 +185,7 @@ const SidebarBoxModeModal = () => {
       }}
     >
       <h3>Box Mode</h3>
-      <div
-        className="sidebarModeOption"
-        onClick={() => {
-          const box = document.createElement("div");
-          const scrapWindow = document.getElementById("scrapWindowContentBox");
-
-          box.style.display = "flex";
-          box.style.justifyContent = "flex-start";
-          box.style.alignItems = "center";
-          box.style.flexDirection = "column";
-          box.style.margin = "5px 0";
-          box.style.padding = "10px";
-          box.style.width = "500px";
-          box.style.boxShadow = "0 0 0 2px #ccc";
-
-          box.classList.add("BoxComponent");
-          scrapWindow.insertAdjacentElement("beforeend", box);
-        }}
-      >
+      <div className="sidebarModeOption" onClick={addBoxOnClick}>
         Add Box
       </div>
       <div
@@ -176,98 +197,22 @@ const SidebarBoxModeModal = () => {
         Delete Element
       </div>
       <hr />
-      <div
-        className="sidebarModeOption"
-        onClick={() => {
-          const boxes = document.getElementsByClassName("BoxComponent");
-
-          for (let i = 0; i < boxes.length; i++) {
-            if (isBoxBorder) {
-              boxes[i].style.boxShadow = "none";
-            } else {
-              boxes[i].style.boxShadow = "0 0 0 2px #ccc";
-            }
-          }
-
-          setIsBoxBorder(!isBoxBorder);
-        }}
-      >
+      <div className="sidebarModeOption" onClick={toggleBoxBorderOnClick}>
         Toggle Box Border
       </div>
       <hr />
       <div className="sortContainer">
-        <div
-          className="sortBox sortTop"
-          onClick={() => {
-            selectedElement.style.display = "flex";
-            selectedElement.style.justifyContent = "center";
-            selectedElement.style.alignItems = "flex-start";
-            selectedElement.style.flexDirection = "row";
-          }}
-        >
-          <div className="smallFigure"></div>
-          <div className="bigFigure"></div>
-        </div>
-        <div
-          className="sortBox sortCenter"
-          onClick={() => {
-            selectedElement.style.display = "flex";
-            selectedElement.style.justifyContent = "center";
-            selectedElement.style.alignItems = "center";
-            selectedElement.style.flexDirection = "row";
-          }}
-        >
-          <div className="smallFigure"></div>
-          <div className="bigFigure"></div>
-        </div>
-        <div
-          className="sortBox sortBottom"
-          onClick={() => {
-            selectedElement.style.display = "flex";
-            selectedElement.style.justifyContent = "center";
-            selectedElement.style.alignItems = "flex-end";
-            selectedElement.style.flexDirection = "row";
-          }}
-        >
-          <div className="smallFigure"></div>
-          <div className="bigFigure"></div>
-        </div>
-        <div
-          className="sortBox sortTop rotate"
-          onClick={() => {
-            selectedElement.style.display = "flex";
-            selectedElement.style.justifyContent = "center";
-            selectedElement.style.alignItems = "flex-start";
-            selectedElement.style.flexDirection = "column";
-          }}
-        >
-          <div className="smallFigure"></div>
-          <div className="bigFigure"></div>
-        </div>
-        <div
-          className="sortBox sortCenter rotate"
-          onClick={() => {
-            selectedElement.style.display = "flex";
-            selectedElement.style.justifyContent = "center";
-            selectedElement.style.alignItems = "center";
-            selectedElement.style.flexDirection = "column";
-          }}
-        >
-          <div className="smallFigure"></div>
-          <div className="bigFigure"></div>
-        </div>
-        <div
-          className="sortBox sortBottom rotate"
-          onClick={() => {
-            selectedElement.style.display = "flex";
-            selectedElement.style.justifyContent = "center";
-            selectedElement.style.alignItems = "flex-end";
-            selectedElement.style.flexDirection = "column";
-          }}
-        >
-          <div className="smallFigure"></div>
-          <div className="bigFigure"></div>
-        </div>
+        {SORT_BOX_OPTION?.map((value, index) => {
+          return (
+            <SortBoxOption
+              alignItems={value.alignItems}
+              flexDirection={value.flexDirection}
+              rotate={value.rotate}
+              sortDirection={value.sortDirection}
+              key={index}
+            />
+          );
+        })}
       </div>
     </SidebarBoxModeModalContainer>
   );

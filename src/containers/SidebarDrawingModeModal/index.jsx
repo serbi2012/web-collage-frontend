@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import COLORS from "../../constants/COLORS";
@@ -7,7 +7,7 @@ import {
   setLineOpacity,
   setLineWidth,
 } from "../../redux/reducers/lineStyle";
-import { changeSidebarModeOption } from "../../redux/reducers/sidebarModeOption";
+import SelectPenBox from "../SelectPenBox";
 
 const SidebarDrawingModeModalContainer = styled.div`
   position: absolute;
@@ -23,27 +23,6 @@ const SidebarDrawingModeModalContainer = styled.div`
   border: 2px solid ${COLORS.MAIN_COLOR};
   border-radius: 5px;
 
-  .sidebarModeOption {
-    margin: 5px 0px;
-    padding: 3px 10px;
-    text-align: center;
-    background-color: ${COLORS.SUB_COLOR};
-    border: 1px solid ${COLORS.MAIN_COLOR};
-    border-radius: 5px;
-    transition: all 0.2s ease-in-out;
-    user-select: none;
-    cursor: pointer;
-
-    :hover {
-      color: ${COLORS.SUB_COLOR};
-      background-color: ${COLORS.MAIN_COLOR};
-    }
-
-    :active {
-      opacity: 0.4;
-    }
-  }
-
   .selected {
     color: ${COLORS.SUB_COLOR};
     background-color: ${COLORS.MAIN_COLOR};
@@ -51,19 +30,10 @@ const SidebarDrawingModeModalContainer = styled.div`
 
   .selectPenBox {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     margin-top: 20px;
-    width: 100%;
-
-    div {
-      margin: 0 2px;
-      padding: 2px 10px;
-      min-width: 80px;
-      text-align: center;
-      border: 2px solid ${COLORS.MAIN_COLOR};
-      border-radius: 2px;
-    }
+    width: 230px;
   }
 
   .drawingOptionBox {
@@ -115,45 +85,21 @@ const SidebarDrawingModeModal = () => {
     >
       <h3>Drawing Mode</h3>
       <div className="selectPenBox">
-        <div
-          className={`sidebarModeOption ignoreClick ${
-            selectedMode === "pen" && "selected"
-          }`}
-          onClick={() => {
-            dispatch(changeSidebarModeOption("Pen"));
-            setSelectedMode("pen");
-          }}
-        >
-          Pen
-        </div>
-        <div
-          className={`sidebarModeOption ignoreClick ${
-            selectedMode === "highlighter" && "selected"
-          }`}
-          onClick={() => {
-            dispatch(changeSidebarModeOption("Highlighter"));
-            setSelectedMode("highlighter");
-          }}
-        >
-          Highlighter
-        </div>
-        <div
-          className={`sidebarModeOption ignoreClick ${
-            selectedMode === "eraser" && "selected"
-          }`}
-          onClick={() => {
-            dispatch(changeSidebarModeOption("Eraser"));
-            setSelectedMode("eraser");
-          }}
-        >
-          Eraser
-        </div>
+        {["pen", "highlighter", "eraser"].map((value, index) => {
+          return (
+            <SelectPenBox
+              mode={value}
+              selectedMode={selectedMode}
+              setSelectedMode={setSelectedMode}
+              key={index}
+            />
+          );
+        })}
       </div>
       <div className="drawingOptionBox">
         <div className="drawingOption">
           <p>Width</p>
           <input
-            className="ignoreClick"
             type="range"
             min="1"
             max="50"
@@ -167,12 +113,11 @@ const SidebarDrawingModeModal = () => {
         <div
           className="drawingOption"
           style={{
-            display: sidebarModeOption !== "Highlighter" && "none",
+            display: sidebarModeOption !== "highlighter" && "none",
           }}
         >
           <p>Opacity</p>
           <input
-            className="ignoreClick"
             type="range"
             min="10"
             max="100"
@@ -186,12 +131,11 @@ const SidebarDrawingModeModal = () => {
         <div
           className="drawingOption"
           style={{
-            display: sidebarModeOption === "Eraser" && "none",
+            display: sidebarModeOption === "eraser" && "none",
           }}
         >
           <p>Color</p>
           <input
-            className="ignoreClick"
             type="color"
             onChange={(event) => {
               dispatch(setLineColor(event.target.value));

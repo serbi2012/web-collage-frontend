@@ -9,7 +9,7 @@ import hasClass from "../../../utils/hasClass";
 import isMouseOn from "../../../utils/isMouseOn";
 import COLORS from "../../constants/COLORS";
 import THEME from "../../constants/THEME";
-import Drawing from "../Drawing";
+import DrawingCanvas from "../DrawingCanvas";
 import EditModal from "../EditModeModal";
 import io from "socket.io-client";
 
@@ -29,7 +29,7 @@ const ScrapWindowContainer = styled.div`
     overflow-y: scroll;
   }
 
-  .resizer-r {
+  .resizerLine {
     height: 100%;
     width: 5px;
     background: ${COLORS.MAIN_COLOR};
@@ -100,7 +100,7 @@ const Box = styled.div`
 
 const ScrapWindow = () => {
   const resizableElementRef = useRef(null);
-  const rightResizerRef = useRef(null);
+  const resizerLineRef = useRef(null);
   const sidebarModeOptionRef = useRef(null);
   const selectedSidebarToolRef = useRef(false);
   const socketRef = useRef(null);
@@ -132,7 +132,7 @@ const ScrapWindow = () => {
 
   useEffect(() => {
     const resizableElement = resizableElementRef.current;
-    const resizerRight = rightResizerRef.current;
+    const resizerRight = resizerLineRef.current;
     const styles = window.getComputedStyle(resizableElement);
     const webWindow = document.getElementById("webWindow");
     const scrapWindow = document.getElementById("scrapWindowContentBox");
@@ -144,7 +144,7 @@ const ScrapWindow = () => {
     let windowWidth = parseInt(styles.width, 10);
     let windowX = 0;
 
-    const onMouseMoveRightResize = (event) => {
+    const rightResizeOnMousemove = (event) => {
       const dx = event.clientX - windowX;
 
       windowX = event.clientX;
@@ -153,20 +153,20 @@ const ScrapWindow = () => {
       webWindow.style.width = `calc((100vw - 70px) - ${windowWidth}px)`;
     };
 
-    const onMouseUpRightResize = () => {
-      document.removeEventListener("mousemove", onMouseMoveRightResize);
+    const rightResizeOnMouseUp = () => {
+      document.removeEventListener("mousemove", rightResizeOnMousemove);
     };
 
-    const onClickRightResize = (event) => {
+    const rightResizeOnClick = (event) => {
       windowX = event.clientX;
       resizableElement.style.left = styles.left;
       resizableElement.style.right = null;
 
-      document.addEventListener("mousemove", onMouseMoveRightResize);
-      document.addEventListener("mouseup", onMouseUpRightResize);
+      document.addEventListener("mousemove", rightResizeOnMousemove);
+      document.addEventListener("mouseup", rightResizeOnMouseUp);
     };
 
-    const scrapWindowContentMouseover = (event) => {
+    const highlightOnMouseover = (event) => {
       if (
         event.target === scrapWindow ||
         isMouseOn(editModal) ||
@@ -177,7 +177,7 @@ const ScrapWindow = () => {
       event.target.classList.add("selectedDom");
     };
 
-    const scrapWindowContentMouseout = (event) => {
+    const highlightOnMouseout = (event) => {
       if (
         event.target === scrapWindow ||
         isMouseOn(editModal) ||
@@ -188,7 +188,7 @@ const ScrapWindow = () => {
       event.target.classList.remove("selectedDom");
     };
 
-    const scrapWindowMousedown = (event) => {
+    const scrapContentOnMousedown = (event) => {
       if (event.target === scrapWindow || event.target === drawingCanvas)
         return;
 
@@ -206,7 +206,7 @@ const ScrapWindow = () => {
       }
     };
 
-    const scrapWindowMousemove = (event) => {
+    const scrapContentOnMousemove = (event) => {
       if (!isDrag) return;
 
       if (selectedSidebarToolRef.current === "selectMode") {
@@ -224,7 +224,7 @@ const ScrapWindow = () => {
       }
     };
 
-    const scrapWindowMouseup = (event) => {
+    const scrapContentOnMouseup = (event) => {
       if (!isDrag) return;
 
       isDrag = false;
@@ -262,43 +262,41 @@ const ScrapWindow = () => {
       });
     };
 
-    window.addEventListener("mouseup", () => {
+    const emitSocketContent = () => {
       socketRef.current.emit("shareScrapContent", {
         scrapContent: scrapWindow.innerHTML,
         shareKey: shareKeyRef.current,
       });
-    });
+    };
 
-    window.addEventListener("keyup", () => {
-      socketRef.current.emit("shareScrapContent", {
-        scrapContent: scrapWindow.innerHTML,
-        shareKey: shareKeyRef.current,
-      });
-    });
-
-    socketRef.current = io.connect(`${SERVER_ADDRESS}`);
-    socketRef.current.on("shareScrapContent", (data) => {
+    const receiveSocketContent = (data) => {
       if (shareKeyRef.current === "") {
         return;
       } else if (data.shareKey === shareKeyRef.current) {
         scrapWindow.innerHTML = data.scrapContent;
       }
-    });
+    };
 
-    resizerRight.addEventListener("mousedown", onClickRightResize);
-    scrapWindow.addEventListener("mouseover", scrapWindowContentMouseover);
-    scrapWindow.addEventListener("mouseout", scrapWindowContentMouseout);
-    scrapWindow.addEventListener("mousedown", scrapWindowMousedown);
-    scrapWindow.addEventListener("mousemove", scrapWindowMousemove);
-    scrapWindow.addEventListener("mouseup", scrapWindowMouseup);
+    window.addEventListener("mouseup", emitSocketContent);
+    window.addEventListener("keyup", emitSocketContent);
+
+    socketRef.current = io.connect(`${SERVER_ADDRESS}`);
+    socketRef.current.on("shareScrapContent", receiveSocketContent);
+
+    resizerRight.addEventListener("mousedown", rightResizeOnClick);
+    scrapWindow.addEventListener("mouseover", highlightOnMouseover);
+    scrapWindow.addEventListener("mouseout", highlightOnMouseout);
+    scrapWindow.addEventListener("mousedown", scrapContentOnMousedown);
+    scrapWindow.addEventListener("mousemove", scrapContentOnMousemove);
+    scrapWindow.addEventListener("mouseup", scrapContentOnMouseup);
 
     return () => {
-      resizerRight.removeEventListener("mousedown", onClickRightResize);
-      scrapWindow.removeEventListener("mouseover", scrapWindowContentMouseover);
-      scrapWindow.removeEventListener("mouseout", scrapWindowContentMouseout);
-      scrapWindow.removeEventListener("mousedown", scrapWindowMousedown);
-      scrapWindow.removeEventListener("mousemove", scrapWindowMousemove);
-      scrapWindow.removeEventListener("mouseup", scrapWindowMouseup);
+      resizerRight.removeEventListener("mousedown", rightResizeOnClick);
+      scrapWindow.removeEventListener("mouseover", highlightOnMouseover);
+      scrapWindow.removeEventListener("mouseout", highlightOnMouseout);
+      scrapWindow.removeEventListener("mousedown", scrapContentOnMousedown);
+      scrapWindow.removeEventListener("mousemove", scrapContentOnMousemove);
+      scrapWindow.removeEventListener("mouseup", scrapContentOnMouseup);
     };
   }, []);
 
@@ -316,8 +314,8 @@ const ScrapWindow = () => {
         <Box className="BoxComponent"></Box>
       </div>
       <EditModal />
-      <Drawing />
-      <div ref={rightResizerRef} className="resizer-r"></div>
+      <DrawingCanvas />
+      <div ref={resizerLineRef} className="resizerLine"></div>
       <div
         className="ScrapWindow-fullscreen"
         onClick={() => {
