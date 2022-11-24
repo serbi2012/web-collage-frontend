@@ -144,7 +144,7 @@ const ScrapWindow = () => {
     let windowWidth = parseInt(styles.width, 10);
     let windowX = 0;
 
-    const rightResizeOnMousemove = (event) => {
+    const resizeScrapWindowOnMousemove = (event) => {
       const dx = event.clientX - windowX;
 
       windowX = event.clientX;
@@ -153,17 +153,17 @@ const ScrapWindow = () => {
       webWindow.style.width = `calc((100vw - 70px) - ${windowWidth}px)`;
     };
 
-    const rightResizeOnMouseUp = () => {
-      document.removeEventListener("mousemove", rightResizeOnMousemove);
+    const resizeScrapWindowOnMouseUp = () => {
+      document.removeEventListener("mousemove", resizeScrapWindowOnMousemove);
     };
 
-    const rightResizeOnClick = (event) => {
+    const resizeScrapWindowOnClick = (event) => {
       windowX = event.clientX;
       resizableElement.style.left = styles.left;
       resizableElement.style.right = null;
 
-      document.addEventListener("mousemove", rightResizeOnMousemove);
-      document.addEventListener("mouseup", rightResizeOnMouseUp);
+      document.addEventListener("mousemove", resizeScrapWindowOnMousemove);
+      document.addEventListener("mouseup", resizeScrapWindowOnMouseUp);
     };
 
     const highlightOnMouseover = (event) => {
@@ -283,7 +283,7 @@ const ScrapWindow = () => {
     socketRef.current = io.connect(`${SERVER_ADDRESS}`);
     socketRef.current.on("shareScrapContent", receiveSocketContent);
 
-    resizerRight.addEventListener("mousedown", rightResizeOnClick);
+    resizerRight.addEventListener("mousedown", resizeScrapWindowOnClick);
     scrapWindow.addEventListener("mouseover", highlightOnMouseover);
     scrapWindow.addEventListener("mouseout", highlightOnMouseout);
     scrapWindow.addEventListener("mousedown", scrapContentOnMousedown);
@@ -291,7 +291,7 @@ const ScrapWindow = () => {
     scrapWindow.addEventListener("mouseup", scrapContentOnMouseup);
 
     return () => {
-      resizerRight.removeEventListener("mousedown", rightResizeOnClick);
+      resizerRight.removeEventListener("mousedown", resizeScrapWindowOnClick);
       scrapWindow.removeEventListener("mouseover", highlightOnMouseover);
       scrapWindow.removeEventListener("mouseout", highlightOnMouseout);
       scrapWindow.removeEventListener("mousedown", scrapContentOnMousedown);

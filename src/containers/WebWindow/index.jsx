@@ -8,6 +8,7 @@ import deleteCookie from "../../../utils/deleteCookie";
 import { SERVER_ADDRESS } from "../../../utils/env";
 import getCookie from "../../../utils/getCookie";
 import isMouseOn from "../../../utils/isMouseOn";
+import manipulateDom from "../../../utils/manipulateDom";
 import COLORS from "../../constants/COLORS";
 import { setUrlAddress } from "../../redux/reducers/urlAddress";
 import AddressBarBox from "../AddressBar";
@@ -249,17 +250,15 @@ const WebWindow = () => {
 
       const sourceDomain = url.slice(`https://`.length).split("/").shift();
       const { data } = await axios.get(url);
-      const htmlString = await axios.post(`${SERVER_ADDRESS}/htmlString/`, {
-        originalHtml: data,
-        sourceDomain,
-      });
+      const htmlString = manipulateDom(data, sourceDomain);
+
       dispatch(setUrlAddress(url));
 
       if (getCookie("urlAddress")) {
         deleteCookie("urlAddress");
       }
 
-      setIframeDom(htmlString.data.htmlString);
+      setIframeDom(htmlString);
     })();
 
     return () => {

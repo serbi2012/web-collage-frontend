@@ -7,6 +7,7 @@ import getCookie from "../../../utils/getCookie";
 import deleteCookie from "../../../utils/deleteCookie";
 import COLORS from "../../constants/COLORS";
 import { setUrlAddress } from "../../redux/reducers/urlAddress";
+import manipulateDom from "../../../utils/manipulateDom";
 
 const AddressBarBoxContainer = styled.div`
   display: flex;
@@ -97,10 +98,7 @@ const AddressBarBox = ({
     const sourceDomain = urlAddress.slice(`https://`.length).split("/").shift();
 
     const { data } = await axios.get(urlAddress);
-    const htmlString = await axios.post(`${SERVER_ADDRESS}/htmlString`, {
-      originalHtml: data,
-      sourceDomain,
-    });
+    const htmlString = manipulateDom(data, sourceDomain);
 
     dispatch(setUrlAddress(urlAddressInput));
 
@@ -108,7 +106,7 @@ const AddressBarBox = ({
       deleteCookie("urlAddress");
     }
 
-    setIframeDom(htmlString.data.htmlString);
+    setIframeDom(htmlString);
   };
 
   return (

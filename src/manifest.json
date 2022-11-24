@@ -24,13 +24,6 @@
       "matches": []
     }
   ],
-  "permissions": [
-    "tabs",
-    "activeTab",
-    "scripting",
-    "cookies",
-    "declarativeContent",
-    "storage"
-  ],
+  "permissions": ["tabs"],
   "host_permissions": ["<all_urls>"]
 }
