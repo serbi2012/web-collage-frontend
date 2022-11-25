@@ -170,12 +170,29 @@ const SidebarBoxModeModal = () => {
   useEffect(() => {
     const scrapWindow = document.getElementById("scrapWindowContentBox");
 
-    scrapWindow.addEventListener("mousedown", (event) => {
+    const selectElementOnMousedown = (event) => {
       if (event.target !== scrapWindow) {
         dispatch(setSelectedElement(event.target));
       }
-    });
-  }, []);
+    };
+
+    const deleteElementOnKeydown = (event) => {
+      if (selectedSidebarTool !== "boxMode") return;
+      console.log("window.addEventListener ~ event.keyCode", event.keyCode);
+
+      if (event.keyCode === 46 || event.keyCode === 8) {
+        selectedElement.remove();
+      }
+    };
+
+    scrapWindow.addEventListener("mousedown", selectElementOnMousedown);
+    window.addEventListener("keydown", deleteElementOnKeydown);
+
+    return () => {
+      scrapWindow.removeEventListener("mousedown", selectElementOnMousedown);
+      window.removeEventListener("keydown", deleteElementOnKeydown);
+    };
+  }, [selectedSidebarTool, selectedElement]);
 
   return (
     <SidebarBoxModeModalContainer

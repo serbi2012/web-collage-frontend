@@ -8,6 +8,7 @@ import deleteCookie from "../../../utils/deleteCookie";
 import { SERVER_ADDRESS } from "../../../utils/env";
 import getCookie from "../../../utils/getCookie";
 import isMouseOn from "../../../utils/isMouseOn";
+import manipulateDom from "../../../utils/manipulateDom";
 import COLORS from "../../constants/COLORS";
 import { setUrlAddress } from "../../redux/reducers/urlAddress";
 import AddressBarBox from "../AddressBar";
@@ -94,7 +95,7 @@ const WebWindowContainer = styled.div`
   }
 `;
 
-const BodyContainer = styled.div`
+const WebContainer = styled.div`
   height: 100%;
   width: 100%;
   overflow-y: scroll;
@@ -110,7 +111,7 @@ const WebWindow = () => {
   const { shareKey } = useSelector(({ shareKey }) => shareKey);
   const { urlAddress } = useSelector(({ urlAddress }) => urlAddress);
 
-  const [iframeDom, setIframeDom] = useState(null);
+  const [webContainerDom, setWebContainerDom] = useState(null);
   const [selectedBlock, setSelectedBlock] = useState(null);
   const [isAddressBarFold, setIsAddressBarFold] = useState(true);
   const [isScrapMode, setIsScrapMode] = useState(false);
@@ -249,17 +250,15 @@ const WebWindow = () => {
 
       const sourceDomain = url.slice(`https://`.length).split("/").shift();
       const { data } = await axios.get(url);
-      const htmlString = await axios.post(`${SERVER_ADDRESS}/htmlString/`, {
-        originalHtml: data,
-        sourceDomain,
-      });
+      const htmlString = manipulateDom(data, sourceDomain);
+
       dispatch(setUrlAddress(url));
 
       if (getCookie("urlAddress")) {
         deleteCookie("urlAddress");
       }
 
-      setIframeDom(htmlString.data.htmlString);
+      setWebContainerDom(htmlString);
     })();
 
     return () => {
@@ -288,7 +287,7 @@ const WebWindow = () => {
       <AddressBarBox
         isAddressBarFold={isAddressBarFold}
         setIsAddressBarFold={setIsAddressBarFold}
-        setIframeDom={setIframeDom}
+        setWebContainerDom={setWebContainerDom}
       />
       <div
         className={`WebWindow-scrapModeButton ${
@@ -300,9 +299,9 @@ const WebWindow = () => {
       >
         <span className="material-symbols-outlined">file_copy</span>
       </div>
-      <BodyContainer
+      <WebContainer
         id="webWindowContent"
-        dangerouslySetInnerHTML={{ __html: iframeDom }}
+        dangerouslySetInnerHTML={{ __html: webContainerDom }}
       />
     </WebWindowContainer>
   );

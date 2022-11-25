@@ -2,11 +2,11 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { SERVER_ADDRESS } from "../../../utils/env";
 import getCookie from "../../../utils/getCookie";
 import deleteCookie from "../../../utils/deleteCookie";
 import COLORS from "../../constants/COLORS";
 import { setUrlAddress } from "../../redux/reducers/urlAddress";
+import manipulateDom from "../../../utils/manipulateDom";
 
 const AddressBarBoxContainer = styled.div`
   display: flex;
@@ -85,7 +85,7 @@ const AddressBarBoxContainer = styled.div`
 const AddressBarBox = ({
   isAddressBarFold,
   setIsAddressBarFold,
-  setIframeDom,
+  setWebContainerDom,
 }) => {
   const { urlAddress } = useSelector(({ urlAddress }) => urlAddress);
 
@@ -97,10 +97,7 @@ const AddressBarBox = ({
     const sourceDomain = urlAddress.slice(`https://`.length).split("/").shift();
 
     const { data } = await axios.get(urlAddress);
-    const htmlString = await axios.post(`${SERVER_ADDRESS}/htmlString`, {
-      originalHtml: data,
-      sourceDomain,
-    });
+    const htmlString = manipulateDom(data, sourceDomain);
 
     dispatch(setUrlAddress(urlAddressInput));
 
@@ -108,7 +105,7 @@ const AddressBarBox = ({
       deleteCookie("urlAddress");
     }
 
-    setIframeDom(htmlString.data.htmlString);
+    setWebContainerDom(htmlString);
   };
 
   return (
@@ -118,6 +115,7 @@ const AddressBarBox = ({
       }}
     >
       <input
+        data-testid="addressInput"
         defaultValue={
           getCookie("urlAddress") ||
           urlAddress ||
@@ -128,6 +126,7 @@ const AddressBarBox = ({
         }}
       />
       <span
+        data-testid="addressConnect"
         className="material-symbols-outlined AddressBar-changeUrlButton"
         onClick={connectToUrlAddressOnClick}
       >

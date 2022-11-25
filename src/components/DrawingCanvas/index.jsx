@@ -246,7 +246,7 @@ const DrawingCanvas = () => {
         ref={canvasRef}
         id="drawingCanvas"
         style={{
-          zIndex: selectedSidebarTool === "drawingMode" ? "1" : "-1",
+          zIndex: selectedSidebarTool === "drawingMode" ? "10000" : "-1",
         }}
       />
     </DrawingCanvasContainer>
