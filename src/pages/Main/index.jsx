@@ -3,9 +3,9 @@ import { render } from "react-dom";
 import { Provider } from "react-redux";
 import store from "../../redux/configureStore";
 import styled from "styled-components";
-import Sidebar from "../../containers/Sidebar";
-import ScrapWindow from "../../containers/ScrapWindow";
-import WebWindow from "../../containers/WebWindow";
+import Sidebar from "../../components/Sidebar";
+import ScrapWindow from "../../components/ScrapWindow";
+import WebWindow from "../../components/WebWindow";
 import "./index.css";
 
 const MainContainer = styled.div`

@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export const selectedSidebarTool = createSlice({
   name: "selectedSidebarTool",
   initialState: {
-    selectedSidebarTool: "null",
+    selectedSidebarTool: "",
     isSidebarModalOpen: false,
   },
   reducers: {
