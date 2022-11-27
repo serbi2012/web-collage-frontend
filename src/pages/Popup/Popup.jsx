@@ -24,7 +24,7 @@ const PopupContainer = styled.div`
     width: 200px;
   }
 
-  .Popup-header {
+  header {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -34,7 +34,7 @@ const PopupContainer = styled.div`
     color: white;
   }
 
-  .Popup-collageButton {
+  .collageButton {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -48,15 +48,15 @@ const PopupContainer = styled.div`
     transition: all 0.2s ease-in-out;
   }
 
-  .Popup-collageButton:hover {
+  .collageButton:hover {
     background-color: hsl(0, 0%, 90%);
   }
 
-  .Popup-collageButton:active {
+  .collageButton:active {
     background-color: hsl(0, 0%, 70%);
   }
 
-  .Popup-collageButton > span {
+  .collageButton > span {
     font-size: 50px;
   }
 
@@ -114,11 +114,11 @@ const Popup = () => {
 
   return (
     <PopupContainer>
-      <header className="Popup-header">
+      <header>
         <h1>Web Collage</h1>
       </header>
       <div
-        className="Popup-collageButton"
+        className="collageButton"
         onClick={() => {
           window.open("main.html");
         }}

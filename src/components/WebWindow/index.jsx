@@ -23,7 +23,7 @@ const WebWindowContainer = styled.div`
   overflow-y: scroll;
   user-select: none;
 
-  .WebWindow-ratioButton {
+  .ratioButton {
     position: absolute;
     display: flex;
     justify-content: center;
@@ -52,7 +52,7 @@ const WebWindowContainer = styled.div`
     }
   }
 
-  .WebWindow-scrapModeButton {
+  .scrapModeButton {
     position: absolute;
     display: flex;
     justify-content: center;
@@ -82,7 +82,7 @@ const WebWindowContainer = styled.div`
     }
   }
 
-  .WebWindow-scrapMode {
+  .scrapMode {
     color: ${COLORS.SUB_COLOR};
     background-color: ${COLORS.MAIN_COLOR};
     user-select: none;
@@ -131,7 +131,7 @@ const WebWindow = () => {
     const block = blockRef.current;
     const webWindowContent = document.getElementById("webWindowContent");
 
-    let isDrag = false;
+    let dragging = false;
     let selectedElement;
 
     const webWindowContentMouseover = (event) => {
@@ -149,7 +149,7 @@ const WebWindow = () => {
     const webWindowMousedown = (event) => {
       if (!isScrapModeRef.current) return;
 
-      isDrag = true;
+      dragging = true;
       selectedElement = event.target;
 
       block.style.display = "flex";
@@ -164,7 +164,7 @@ const WebWindow = () => {
 
     const windowMousemove = (event) => {
       if (!isScrapModeRef.current) return;
-      if (!isDrag) return;
+      if (!dragging) return;
 
       block.style.top = `${event.clientY}px`;
       block.style.left = `${event.clientX}px`;
@@ -172,13 +172,13 @@ const WebWindow = () => {
 
     const windowMouseup = (event) => {
       if (!isScrapModeRef.current) return;
-      if (!isDrag) return;
+      if (!dragging) return;
 
       const boxes = document.getElementsByClassName("BoxComponent");
       const scrapWindow = document.getElementById("scrapWindowContentBox");
       const copiedBox = boxes[0].cloneNode(false);
 
-      isDrag = false;
+      dragging = false;
 
       block.style.top = `${event.clientY}px`;
       block.style.left = `${event.clientX}px`;
@@ -290,8 +290,8 @@ const WebWindow = () => {
         setWebContainerDom={setWebContainerDom}
       />
       <div
-        className={`WebWindow-scrapModeButton ${
-          isScrapMode && "WebWindow-scrapMode"
+        className={`scrapModeButton ${
+          isScrapMode && "scrapMode"
         }`}
         onClick={() => {
           setIsScrapMode(!isScrapMode);

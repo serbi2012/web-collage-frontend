@@ -29,7 +29,7 @@ const EditModalContainer = styled.div`
     }
   }
 
-  .EditModal-verticalLine {
+  .verticalLine {
     margin: 0 10px;
     height: 25px;
     width: 1px;
@@ -88,7 +88,7 @@ const EditModal = () => {
         <option value="6">32</option>
         <option value="7">48</option>
       </select>
-      <div className="EditModal-verticalLine" />
+      <div className="verticalLine" />
       {EDIT_MODAL_OPTIONS.map((value, index) => {
         return (
           <EditModalOption

@@ -48,7 +48,7 @@ const SidebarTool = ({ icon, mode }) => {
 
   return (
     <SidebarToolContainer
-      className={selectedSidebarTool === mode && "Sidebar-selectedTool"}
+      className={selectedSidebarTool === mode && "selectedTool"}
       onClick={changeSidebarToolOnClick}
     >
       <span className="material-symbols-outlined">{icon}</span>

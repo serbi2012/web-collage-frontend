@@ -142,14 +142,6 @@ const SidebarDrawingModeModal = () => {
             }}
           />
         </div>
-        <button
-          className="drawingOption"
-          style={{
-            display: sidebarModeOption !== "eraser" && "none",
-          }}
-        >
-          <p>Erase All</p>
-        </button>
       </div>
     </SidebarDrawingModeModalContainer>
   );
