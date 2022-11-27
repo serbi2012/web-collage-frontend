@@ -32,7 +32,7 @@ const AddressBarBoxContainer = styled.div`
     }
   }
 
-  .AddressBar-changeUrlButton {
+  .changeUrlButton {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -55,7 +55,7 @@ const AddressBarBoxContainer = styled.div`
     }
   }
 
-  .AddressBar-foldButton {
+  .foldButton {
     position: absolute;
     display: flex;
     justify-content: center;
@@ -127,13 +127,13 @@ const AddressBarBox = ({
       />
       <span
         data-testid="addressConnect"
-        className="material-symbols-outlined AddressBar-changeUrlButton"
+        className="material-symbols-outlined changeUrlButton"
         onClick={connectToUrlAddressOnClick}
       >
         arrow_forward
       </span>
       <div
-        className="AddressBar-foldButton"
+        className="foldButton"
         onClick={() => {
           setIsAddressBarFold(!isAddressBarFold);
         }}
