@@ -23,7 +23,7 @@ const SidebarContainer = styled.div`
   transition: all 0.3s ease-in-out;
   z-index: 200000;
 
-  .Sidebar-selectedTool {
+  .selectedTool {
     color: ${COLORS.MAIN_COLOR};
     background-color: ${COLORS.SUB_COLOR};
   }

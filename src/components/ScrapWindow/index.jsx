@@ -36,7 +36,7 @@ const ScrapWindowContainer = styled.div`
     cursor: col-resize;
   }
 
-  .ScrapWindow-fullscreen {
+  .fullscreenButton {
     position: absolute;
     display: flex;
     justify-content: center;
@@ -139,7 +139,7 @@ const ScrapWindow = () => {
     const editModal = document.getElementById("editModal");
     const drawingCanvas = document.getElementById("drawingCanvas");
 
-    let isDrag = false;
+    let dragging = false;
     let selectedElement;
     let windowWidth = parseInt(styles.width, 10);
     let windowX = 0;
@@ -193,7 +193,7 @@ const ScrapWindow = () => {
         return;
 
       if (selectedSidebarToolRef.current === "selectMode") {
-        isDrag = true;
+        dragging = true;
         selectedElement = event.target;
         selectedElement.style.position = "absolute";
         selectedElement.style.top = `${event.clientY + 20}px`;
@@ -201,13 +201,13 @@ const ScrapWindow = () => {
 
         scrapWindow.insertAdjacentElement("beforeend", selectedElement);
       } else if (selectedSidebarToolRef.current === "editMode") {
-        isDrag = true;
+        dragging = true;
         selectedElement = event.target;
       }
     };
 
     const scrapContentOnMousemove = (event) => {
-      if (!isDrag) return;
+      if (!dragging) return;
 
       if (selectedSidebarToolRef.current === "selectMode") {
         selectedElement.style.top = `${event.clientY + 20}px`;
@@ -225,9 +225,9 @@ const ScrapWindow = () => {
     };
 
     const scrapContentOnMouseup = (event) => {
-      if (!isDrag) return;
+      if (!dragging) return;
 
-      isDrag = false;
+      dragging = false;
 
       if (selectedSidebarToolRef.current === "selectMode") {
         const boxes = document.getElementsByClassName("BoxComponent");
@@ -317,7 +317,7 @@ const ScrapWindow = () => {
       <DrawingCanvas />
       <div ref={resizerLineRef} className="resizerLine"></div>
       <div
-        className="ScrapWindow-fullscreen"
+        className="fullscreenButton"
         onClick={() => {
           const webWindow = document.getElementById("webWindow");
 
