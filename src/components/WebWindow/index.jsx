@@ -290,9 +290,7 @@ const WebWindow = () => {
         setWebContainerDom={setWebContainerDom}
       />
       <div
-        className={`scrapModeButton ${
-          isScrapMode && "scrapMode"
-        }`}
+        className={`scrapModeButton ${isScrapMode && "scrapMode"}`}
         onClick={() => {
           setIsScrapMode(!isScrapMode);
         }}

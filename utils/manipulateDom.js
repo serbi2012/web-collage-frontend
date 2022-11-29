@@ -30,6 +30,12 @@ export default (originalHtml, sourceDomain) => {
     $(this).attr("src", `https://${sourceDomain}${this.attribs["src"]}`);
   });
 
+  $("a").each(function (index, element) {
+    $(this).attr("target", "_blank");
+
+    $(this).attr("href", `https://${sourceDomain}${this.attribs["href"]}`);
+  });
+
   $(`img`).each(function (index, element) {
     if (this.attribs["src"]?.startsWith("https://")) return;
 
