@@ -11,10 +11,8 @@ describe("shareKey reducer", () => {
     });
   });
 
-  const key = "testKey";
-
   it("should handle setShareKey", () => {
-    const test = shareKey(initialState, setShareKey(key));
+    const test = shareKey(initialState, setShareKey("testKey"));
 
     expect(test.shareKey).toEqual("testKey");
   });

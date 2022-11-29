@@ -13,12 +13,10 @@ describe("sidebarModeOption reducer", () => {
     });
   });
 
-  const modeOption = "FreePosition";
-
   it("should handle changeSidebarModeOption", () => {
     const test = sidebarModeOption(
       initialState,
-      changeSidebarModeOption(modeOption)
+      changeSidebarModeOption("FreePosition")
     );
 
     expect(test.sidebarModeOption).toEqual("FreePosition");

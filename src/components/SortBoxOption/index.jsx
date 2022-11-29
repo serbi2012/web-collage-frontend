@@ -83,6 +83,7 @@ const SortBoxOption = ({
 
   return (
     <SortBoxOptionContainer
+      data-testid="sortBoxOption"
       className={`sortBox ${sortDirection} ${rotate && "rotate"}`}
       onClick={sortBoxOnClick}
     >

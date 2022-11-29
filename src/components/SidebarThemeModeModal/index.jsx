@@ -100,6 +100,7 @@ const SidebarThemeModeModal = () => {
 
   return (
     <SidebarThemeModeModalContainer
+      data-testid="sidebarThemeModeModal"
       style={{
         display:
           (selectedSidebarTool !== "themeMode" || !isSidebarModalOpen) &&
@@ -109,11 +110,19 @@ const SidebarThemeModeModal = () => {
       <h3>Theme Mode</h3>
       <h5>Width</h5>
       <div className="scrapWindowWidthBox">
-        <div className="sidebarModeOption" onMouseDown={reduceWidthMouseDown}>
+        <div
+          data-testid="reduceWidth"
+          className="sidebarModeOption"
+          onMouseDown={reduceWidthMouseDown}
+        >
           -
         </div>
         {scrapWindowWidth}px
-        <div className="sidebarModeOption" onMouseDown={increaseWidthMouseDown}>
+        <div
+          data-testid="increaseWidth"
+          className="sidebarModeOption"
+          onMouseDown={increaseWidthMouseDown}
+        >
           +
         </div>
       </div>
@@ -121,7 +130,7 @@ const SidebarThemeModeModal = () => {
       <h5>Theme</h5>
       <div className="themeBox">
         {Object.values(THEME).map((value, index) => {
-          return <ThemeOption theme={value} />;
+          return <ThemeOption theme={value} key={index} />;
         })}
       </div>
     </SidebarThemeModeModalContainer>

@@ -11,6 +11,12 @@ describe("lineStyle reducer", () => {
     lineOpacity: 20,
   };
 
+  const testStyle = {
+    color: "red",
+    width: 10,
+    opacity: 40,
+  };
+
   it("Return the initial state when undefined received", () => {
     expect(lineStyle(undefined, { type: undefined })).toEqual({
       lineColor: "black",
@@ -19,24 +25,20 @@ describe("lineStyle reducer", () => {
     });
   });
 
-  const color = "red";
-  const width = 10;
-  const opacity = 40;
-
   it("should handle setLineColor", () => {
-    const test = lineStyle(initialState, setLineColor(color));
+    const test = lineStyle(initialState, setLineColor(testStyle.color));
 
     expect(test.lineColor).toEqual("red");
   });
 
   it("should handle setLineWidth", () => {
-    const test = lineStyle(initialState, setLineWidth(width));
+    const test = lineStyle(initialState, setLineWidth(testStyle.width));
 
     expect(test.lineWidth).toEqual(10);
   });
 
   it("should handle setLineOpacity", () => {
-    const test = lineStyle(initialState, setLineOpacity(opacity));
+    const test = lineStyle(initialState, setLineOpacity(testStyle.opacity));
 
     expect(test.lineOpacity).toEqual(40);
   });

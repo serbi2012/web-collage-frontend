@@ -11,10 +11,8 @@ describe("theme reducer", () => {
     });
   });
 
-  const darkTheme = "theme-dark";
-
   it("should handle setTheme", () => {
-    const test = theme(initialState, setTheme(darkTheme));
+    const test = theme(initialState, setTheme("theme-dark"));
 
     expect(test.theme).toEqual("theme-dark");
   });
