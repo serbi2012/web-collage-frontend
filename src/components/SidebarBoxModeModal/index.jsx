@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import hasClass from "../../../utils/hasClass";
 import COLORS from "../../constants/COLORS";
 import SORT_BOX_OPTION from "../../constants/SORT_BOX_OPTION";
 import { setSelectedElement } from "../../redux/reducers/selectedElement";
