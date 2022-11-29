@@ -276,7 +276,11 @@ const WebWindow = () => {
   }, [urlAddress]);
 
   return (
-    <WebWindowContainer id="webWindow" ref={webWindowRef}>
+    <WebWindowContainer
+      id="webWindow"
+      data-testid="webWindow"
+      ref={webWindowRef}
+    >
       <div
         id="selectedBlock"
         ref={blockRef}
@@ -284,6 +288,7 @@ const WebWindow = () => {
         dangerouslySetInnerHTML={{ __html: selectedBlock }}
       />
       <AddressBarBox
+        data-testid="addressBarBox"
         isAddressBarFold={isAddressBarFold}
         setIsAddressBarFold={setIsAddressBarFold}
         setWebContainerDom={setWebContainerDom}
