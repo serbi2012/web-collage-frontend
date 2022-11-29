@@ -1,4 +1,6 @@
-import urlAddress, { setUrlAddress } from "../../../redux/reducers/urlAddress";
+import urlAddress, {
+  setUrlAddress,
+} from "../../../../redux/reducers/urlAddress";
 
 describe("urlAddress reducer", () => {
   const initialState = {

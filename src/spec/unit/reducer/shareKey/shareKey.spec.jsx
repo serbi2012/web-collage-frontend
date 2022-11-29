@@ -1,4 +1,4 @@
-import shareKey, { setShareKey } from "../../../redux/reducers/shareKey";
+import shareKey, { setShareKey } from "../../../../redux/reducers/shareKey";
 
 describe("shareKey reducer", () => {
   const initialState = {

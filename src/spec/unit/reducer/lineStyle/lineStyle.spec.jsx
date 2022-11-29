@@ -2,7 +2,7 @@ import lineStyle, {
   setLineColor,
   setLineOpacity,
   setLineWidth,
-} from "../../../redux/reducers/lineStyle";
+} from "../../../../redux/reducers/lineStyle";
 
 describe("lineStyle reducer", () => {
   const initialState = {

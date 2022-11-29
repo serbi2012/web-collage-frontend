@@ -1,4 +1,4 @@
-import theme, { setTheme } from "../../../redux/reducers/theme";
+import theme, { setTheme } from "../../../../redux/reducers/theme";
 
 describe("theme reducer", () => {
   const initialState = {
