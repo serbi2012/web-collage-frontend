@@ -1,10 +1,11 @@
 import selectedSidebarTool, {
   selectSidebarTool,
   toggleModalOpen,
-} from "../../../redux/reducers/selectedSidebarTool";
+} from "../../../../redux/reducers/selectedSidebarTool";
 
 describe("selectedSidebarTool reducer", () => {
   const initialState = { selectedSidebarTool: "", isSidebarModalOpen: false };
+  const testTool = { mode: "editMode", isModalOpen: true };
 
   it("Return the initial state when undefined received", () => {
     expect(selectedSidebarTool(undefined, { type: undefined })).toEqual({
@@ -13,12 +14,10 @@ describe("selectedSidebarTool reducer", () => {
     });
   });
 
-  const tool = { mode: "editMode", isModalOpen: true };
-
   it("should handle selectSidebarTool", () => {
     const test = selectedSidebarTool(
       initialState,
-      selectSidebarTool(tool.mode)
+      selectSidebarTool(testTool.mode)
     );
 
     expect(test.selectedSidebarTool).toEqual("editMode");
@@ -27,7 +26,7 @@ describe("selectedSidebarTool reducer", () => {
   it("should handle toggleModalOpen", () => {
     const test = selectedSidebarTool(
       initialState,
-      toggleModalOpen(tool.isModalOpen)
+      toggleModalOpen(testTool.isModalOpen)
     );
 
     expect(test.isSidebarModalOpen).toEqual(true);

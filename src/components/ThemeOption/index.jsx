@@ -29,6 +29,7 @@ const ThemeOption = ({ theme }) => {
 
   return (
     <ThemeOptionContainer
+      data-testid="themeOption"
       style={{ backgroundColor: theme.BACKGROUND_COLOR }}
       onMouseDown={changeThemeOnMouseDown}
     />

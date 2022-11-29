@@ -2,15 +2,14 @@ import axios from "axios";
 import React, { useRef } from "react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { setUrlAddress } from "../../redux/reducers/urlAddress";
 import { io } from "socket.io-client";
 import styled from "styled-components";
-import deleteCookie from "../../../utils/deleteCookie";
 import { SERVER_ADDRESS } from "../../../utils/env";
-import getCookie from "../../../utils/getCookie";
 import isMouseOn from "../../../utils/isMouseOn";
+import { getCookie, deleteCookie } from "../../../utils/manageCookie";
 import manipulateDom from "../../../utils/manipulateDom";
 import COLORS from "../../constants/COLORS";
-import { setUrlAddress } from "../../redux/reducers/urlAddress";
 import AddressBarBox from "../AddressBar";
 
 const WebWindowContainer = styled.div`
@@ -277,7 +276,11 @@ const WebWindow = () => {
   }, [urlAddress]);
 
   return (
-    <WebWindowContainer id="webWindow" ref={webWindowRef}>
+    <WebWindowContainer
+      id="webWindow"
+      data-testid="webWindow"
+      ref={webWindowRef}
+    >
       <div
         id="selectedBlock"
         ref={blockRef}
@@ -285,14 +288,13 @@ const WebWindow = () => {
         dangerouslySetInnerHTML={{ __html: selectedBlock }}
       />
       <AddressBarBox
+        data-testid="addressBarBox"
         isAddressBarFold={isAddressBarFold}
         setIsAddressBarFold={setIsAddressBarFold}
         setWebContainerDom={setWebContainerDom}
       />
       <div
-        className={`scrapModeButton ${
-          isScrapMode && "scrapMode"
-        }`}
+        className={`scrapModeButton ${isScrapMode && "scrapMode"}`}
         onClick={() => {
           setIsScrapMode(!isScrapMode);
         }}

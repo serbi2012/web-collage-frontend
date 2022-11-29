@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export const urlAddress = createSlice({
   name: "urlAddress",
   initialState: {
-    urlAddress: "https://illuminating-extol-innovation.w3spaces.com/",
+    urlAddress: "https://illuminating-extol-innovation.w3spaces.com",
   },
   reducers: {
     setUrlAddress(state, action) {

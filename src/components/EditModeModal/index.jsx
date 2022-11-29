@@ -13,7 +13,7 @@ const EditModalContainer = styled.div`
   padding: 20px 20px;
   top: 10px;
   left: 80px;
-  height: 50px;
+  height: 4rem;
   background-color: ${COLORS.MAIN_COLOR};
   border-radius: 5px;
   z-index: 200000;

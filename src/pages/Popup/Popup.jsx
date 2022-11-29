@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import setCookie from "../../../utils/setCookie";
+import { setCookie } from "../../../utils/manageCookie";
 import COLORS from "../../constants/COLORS";
 
 const PopupContainer = styled.div`

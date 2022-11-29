@@ -10,16 +10,30 @@ const setWebContainerDom = jest.fn();
 const setUrlAddressInput = jest.fn();
 const manipulateDom = jest.fn();
 const connectToUrlAddressOnClick = jest.fn();
+
+let urlAddressInput;
+let htmlString;
+
 jest.mock("axios");
+
+beforeEach(() => {
+  setUrlAddressInput.mockImplementation((value) => {
+    return (urlAddressInput = value);
+  });
+
+  setWebContainerDom.mockImplementation((data) => {
+    if (urlAddressInput === "https://www.sample.com") {
+      htmlString = sampleWebsiteHtml;
+    }
+  });
+
+  manipulateDom.mockImplementation((data) => {
+    return data;
+  });
+});
 
 describe("AddressBar", () => {
   it("depending on the value entered in the input, urlAddressInput should also change.", () => {
-    let urlAddressInput;
-
-    setUrlAddressInput.mockImplementation((value) => {
-      return (urlAddressInput = value);
-    });
-
     render(
       <Provider store={store}>
         <AddressBarBox />
@@ -40,23 +54,6 @@ describe("AddressBar", () => {
   });
 
   it("can get Html Data through urlAddressInput.", () => {
-    let urlAddressInput;
-    let htmlString;
-
-    setUrlAddressInput.mockImplementation((value) => {
-      return (urlAddressInput = value);
-    });
-
-    setWebContainerDom.mockImplementation((data) => {
-      if (urlAddressInput === "https://www.sample.com") {
-        htmlString = sampleWebsiteHtml;
-      }
-    });
-
-    manipulateDom.mockImplementation((data) => {
-      return data;
-    });
-
     axios.get.mockImplementation(() =>
       Promise.resolve({ status: 200, data: sampleWebsiteHtml })
     );
@@ -80,7 +77,6 @@ describe("AddressBar", () => {
     expect(urlAddressInput).toBe("https://www.sample.com");
 
     fireEvent.click(screen.getByTestId("addressConnect"));
-
     connectToUrlAddressOnClick();
     setWebContainerDom(sampleWebsiteHtml);
 

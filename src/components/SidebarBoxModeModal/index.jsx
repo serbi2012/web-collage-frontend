@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import hasClass from "../../../utils/hasClass";
 import COLORS from "../../constants/COLORS";
 import SORT_BOX_OPTION from "../../constants/SORT_BOX_OPTION";
 import { setSelectedElement } from "../../redux/reducers/selectedElement";
@@ -57,69 +56,8 @@ const SidebarBoxModeModalContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 180px;
+    min-width: 230px;
     flex-wrap: wrap;
-  }
-
-  .sortBox {
-    display: flex;
-    justify-content: center;
-    margin: 5px;
-    padding: 10px 5px;
-    height: 50px;
-    width: 50px;
-    background-color: ${COLORS.SUB_COLOR};
-    border: 1px solid ${COLORS.MAIN_COLOR};
-    border-radius: 5px;
-    transition: all 0.2s ease-in-out;
-    user-select: none;
-    cursor: pointer;
-
-    :hover {
-      color: ${COLORS.SUB_COLOR};
-      background-color: ${COLORS.MAIN_COLOR};
-
-      .bigFigure,
-      .smallFigure {
-        border: 2px solid ${COLORS.SUB_COLOR};
-      }
-    }
-
-    :active {
-      opacity: 0.4;
-    }
-  }
-
-  .sortTop {
-    align-items: flex-start;
-  }
-
-  .sortCenter {
-    align-items: center;
-  }
-
-  .sortBottom {
-    align-items: flex-end;
-  }
-
-  .bigFigure {
-    margin: 0 1px;
-    height: 30px;
-    width: 14px;
-    border: 2px solid ${COLORS.MAIN_COLOR};
-    border-radius: 2px;
-  }
-
-  .smallFigure {
-    margin: 0 1px;
-    height: 20px;
-    width: 14px;
-    border: 2px solid ${COLORS.MAIN_COLOR};
-    border-radius: 2px;
-  }
-
-  .rotate {
-    transform: rotate(270deg);
   }
 `;
 

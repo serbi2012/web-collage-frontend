@@ -2,33 +2,39 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import getCookie from "../../../utils/getCookie";
-import deleteCookie from "../../../utils/deleteCookie";
 import COLORS from "../../constants/COLORS";
 import { setUrlAddress } from "../../redux/reducers/urlAddress";
 import manipulateDom from "../../../utils/manipulateDom";
+import { getCookie, deleteCookie } from "../../../utils/manageCookie";
 
 const AddressBarBoxContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  padding: 5px 5px;
   width: 250px;
-  top: 20px;
+  top: 10px;
   background-color: ${COLORS.SUB_COLOR};
   border-radius: 5px;
   box-shadow: 1px 2px 3px 0px rgba(0, 0, 0, 0.2);
   transition: all 0.4s ease-in-out;
   z-index: 2000000;
 
-  input {
-    padding: 5px 10px;
+  form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 5px;
     width: 250px;
-    border-radius: 5px;
 
-    :focus {
-      outline: none;
+    input {
+      padding: 5px 10px;
+      width: 250px;
+      border-radius: 5px;
+
+      :focus {
+        outline: none;
+      }
     }
   }
 
@@ -62,7 +68,7 @@ const AddressBarBoxContainer = styled.div`
     align-items: center;
     flex-direction: column;
     background-color: ${COLORS.SUB_COLOR};
-    height: 50px;
+    height: 60px;
     width: 50px;
     color: ${COLORS.MAIN_COLOR};
     border-radius: 50px;
@@ -93,7 +99,9 @@ const AddressBarBox = ({
 
   const dispatch = useDispatch();
 
-  const connectToUrlAddressOnClick = async () => {
+  const connectToUrlAddressOnClick = async (event) => {
+    event.preventDefault();
+
     const sourceDomain = urlAddress.slice(`https://`.length).split("/").shift();
 
     const { data } = await axios.get(urlAddress);
@@ -111,27 +119,30 @@ const AddressBarBox = ({
   return (
     <AddressBarBoxContainer
       style={{
-        transform: isAddressBarFold ? "translateY(-70px)" : "translateY(0px)",
+        transform: isAddressBarFold ? "translateY(-65px)" : "translateY(15px)",
       }}
     >
-      <input
-        data-testid="addressInput"
-        defaultValue={
-          getCookie("urlAddress") ||
-          urlAddress ||
-          "https://eye-catch-danke-foresight.w3spaces.com"
-        }
-        onChange={(event) => {
-          setUrlAddressInput(event.target.value);
-        }}
-      />
-      <span
-        data-testid="addressConnect"
-        className="material-symbols-outlined changeUrlButton"
-        onClick={connectToUrlAddressOnClick}
-      >
-        arrow_forward
-      </span>
+      <form onSubmit={connectToUrlAddressOnClick}>
+        <input
+          type="url"
+          data-testid="addressInput"
+          defaultValue={
+            getCookie("urlAddress") ||
+            urlAddress ||
+            "https://eye-catch-danke-foresight.w3spaces.com"
+          }
+          onChange={(event) => {
+            setUrlAddressInput(event.target.value);
+          }}
+        />
+        <span
+          data-testid="addressConnect"
+          className="material-symbols-outlined changeUrlButton"
+          onClick={connectToUrlAddressOnClick}
+        >
+          arrow_forward
+        </span>
+      </form>
       <div
         className="foldButton"
         onClick={() => {
@@ -139,8 +150,8 @@ const AddressBarBox = ({
         }}
         style={{
           transform: isAddressBarFold
-            ? "translateY(25px)"
-            : "translateY(-15px)",
+            ? "translateY(28px)"
+            : "translateY(-18px)",
         }}
       >
         <span className="material-symbols-outlined">arrow_drop_up</span>
