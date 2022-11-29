@@ -32,6 +32,7 @@ const SidebarFoldButtonContainer = styled.div`
 const SidebarFoldButton = ({ isFold, setIsFold }) => {
   return (
     <SidebarFoldButtonContainer
+      data-testid="sidebarFoldButton"
       style={{
         backgroundColor: isFold
           ? `${COLORS.MAIN_COLOR}`
