@@ -19,6 +19,7 @@ const DrawingCanvasContainer = styled.div`
     top: 0;
     left: 0;
     user-select: none;
+    z-index: 10000;
   }
 `;
 
@@ -246,7 +247,7 @@ const DrawingCanvas = () => {
         ref={canvasRef}
         id="drawingCanvas"
         style={{
-          zIndex: selectedSidebarTool === "drawingMode" ? "10000" : "-1",
+          pointerEvents: selectedSidebarTool !== "drawingMode" && "none",
         }}
       />
     </DrawingCanvasContainer>

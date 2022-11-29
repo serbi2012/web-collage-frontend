@@ -1,6 +1,6 @@
 import selectedElement, {
   setSelectedElement,
-} from "../../../redux/reducers/selectedElement";
+} from "../../../../redux/reducers/selectedElement";
 
 describe("selectedElement reducer", () => {
   const initialState = {

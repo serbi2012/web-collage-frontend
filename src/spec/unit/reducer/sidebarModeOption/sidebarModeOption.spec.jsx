@@ -1,6 +1,6 @@
 import sidebarModeOption, {
   changeSidebarModeOption,
-} from "../../../redux/reducers/sidebarModeOption";
+} from "../../../../redux/reducers/sidebarModeOption";
 
 describe("sidebarModeOption reducer", () => {
   const initialState = {

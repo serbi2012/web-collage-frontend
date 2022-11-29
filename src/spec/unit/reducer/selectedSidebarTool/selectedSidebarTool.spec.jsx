@@ -1,7 +1,7 @@
 import selectedSidebarTool, {
   selectSidebarTool,
   toggleModalOpen,
-} from "../../../redux/reducers/selectedSidebarTool";
+} from "../../../../redux/reducers/selectedSidebarTool";
 
 describe("selectedSidebarTool reducer", () => {
   const initialState = { selectedSidebarTool: "", isSidebarModalOpen: false };

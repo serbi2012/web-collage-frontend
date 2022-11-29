@@ -2,11 +2,10 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import getCookie from "../../../utils/getCookie";
-import deleteCookie from "../../../utils/deleteCookie";
 import COLORS from "../../constants/COLORS";
 import { setUrlAddress } from "../../redux/reducers/urlAddress";
 import manipulateDom from "../../../utils/manipulateDom";
+import { getCookie, deleteCookie } from "../../../utils/manageCookie";
 
 const AddressBarBoxContainer = styled.div`
   display: flex;
