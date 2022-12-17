@@ -7,9 +7,20 @@
 <br/> 
 <br/>
 
-### `❗️ 구현하며 염두해둔 부분`
 
-## `높은 가독성`
+## 🗄 레포지토리 링크
+
+- [Frontend](https://github.com/serbi2012/web-collage-frontend)
+- [Backend](https://github.com/serbi2012/web-collage-backend)
+
+#
+<br/>
+<br/>
+
+
+## ❗️ 구현하며 염두해둔 부분
+
+### 높은 가독성
 
 해당 프로젝트의 첫 시작은 공부를 하며 리서치해 보던 `공식 문서`였다. 프로그래밍을 공부하기 위해 MDN, Jest, Redux 등 다양한 공식 문서를 찾아보는 일이 많았다. React처럼 필요한 정보만 직관성 있게 배치된 공식 문서가 있는 반면 `여러 정보가 혼잡하게 배치되어 가독성이 떨어지는 공식 문서`들도 있다. 이러한 웹페이지들에서 내가 필요한 정보만을 골라서 재구성할 수 있다면? 그리고 그렇게 재구성한 페이지를 저장하거나 다른 사람과 공유할 수 있다면 얼마나 유용할까? 하는 생각에서 본 프로젝트는 출발하였다.
 
@@ -20,7 +31,7 @@
 <br/>
 <br/>
 
-## `직관적인 UX`
+### 직관적인 UX
 
 본 프로젝트는 일종의 `편집기`라고 볼 수 있다. 때문에 사용자가 큰 불편함 없이 본인이 생각한 대로 문서를 편집할 수 있어야 한다고 생각했다. 때문에 사용자가 `직관적으로 이해할 수 있는 UX`를 구성하는 것을 염두에 두었다.
 
@@ -35,7 +46,7 @@ Mac 환경에서는 시스템적으로 웹브라우저의 이미지를 드래그
 <br/>
 <br/>
 
-## `Box & Block 구조`
+### Box & Block 구조
 본 프로젝트는 사용자가 시각적으로 HTML DOM을 직접 구성해나가는 Userflow를 가진다. HTML을 구성하는 과정에서 중요한 것은 부모와 자식 관계를 명확히 하는 것이라 생각했다. 때문에 사용자는 자신이 현재 어떠한 요소가 부모이고 어떠한 요소가 자식인지 직관적으로 이해할 수 있어야 한다고 판단했다. 이를 위해서 `Box & Block` 구조를 구현하였다.
 
 `Block`은 하나하나의 개별 요소이며, `Box`는 그러한 Block을 감싸는 바구니와 같은 역할을 한다. Box는 또 다른 Box에 속할 수 있다. Box와 Block을 구분하는 가장 명확한 기준은 회색의 테두리이다. 테두리가 있다면 그것은 Box이고 없다면 Block이다. 이러한 Box & Block 구조를 통해 사용자가 어떠한 요소를 감쌀 때는 Box를 사용하고 개별적인 요소만을 나열하고 싶다면 Block으로만 구성한다는 것을 직관적으로 이해할 수 있도록 하고 싶었다.
@@ -46,20 +57,8 @@ Mac 환경에서는 시스템적으로 웹브라우저의 이미지를 드래그
 <br/>
 <br/>
 
-#
-<br/>
-<br/>
 
-### `🗄 레포지토리 링크`
-
-- [Frontend](https://github.com/serbi2012/web-collage-frontend)
-- [Backend](https://github.com/serbi2012/web-collage-backend)
-
-#
-<br/>
-<br/>
-
-### `🎥 기능 시연 영상`
+## 🎥 기능 시연 영상
 
 <details>
   <summary>Scrap</summary>
@@ -121,9 +120,9 @@ https://user-images.githubusercontent.com/99075014/204039800-67c25fe5-df90-4a74-
 <br/>
 <br/>
 
-### `💡 핵심 구현 사항`
+## 💡 핵심 구현 사항
 
-## Web Window
+### Web Window
   
   `Web Window`는 사용자가 지정한 url에 해당하는 웹페이지를 보여주는 창이다. 사용자가 실제로 사용하는 웹페이지와 동일한 사용자 경험을 제공하기 위해서는 원본 웹페이지와 유사한 모습이어야 했다. 그리고 구현된 웹페이지에서 Dom 요소를 가져올 수 있어야 했다.
   
@@ -135,7 +134,7 @@ https://user-images.githubusercontent.com/99075014/204039800-67c25fe5-df90-4a74-
 <br/>
 
 
-## Dom 요소 드래그 앤 드랍
+### Dom 요소 드래그 앤 드랍
   
 React 환경에서 드래그 앤 드롭을 구현하고 싶다면 다양한 방법이 있다. 그중 가장 편리하고 빠른 방법은 react-beautiful-dnd과 같은 라이브러리를 사용하는 방법이다. 하지만 단순히 기능 구연만을 하는 것이 아니라 그 기능이 어떠한 원리로 구성되어 있는지를 배워가는 것이 더 가치 있다고 판단하여 드래그 앤 드롭을 라이브러리 없이 직접 구현하기로 결정하였다.
   
@@ -152,7 +151,7 @@ React 환경에서 드래그 앤 드롭을 구현하고 싶다면 다양한 방�
 <br/>
 <br/>
 
-## ContentEditable
+### ContentEditable
   
 `Edit Mode` 구현에서 가장 중요한 점은 사용자가 수정을 할 때 해당 태그에 직접 입력 및 수정할 수 있어야 한다는 것이었다. 그리고 그 과정에서 해당 DOM 요소의 style 속성 또한 유지되어야 했다.
   
@@ -164,11 +163,15 @@ React 환경에서 드래그 앤 드롭을 구현하고 싶다면 다양한 방�
 <br/>
 <br/>
 
+## ⚙️ 셋업 설명
 
-### `⚙️ 셋업 설명`
-
-### Frontend
-
+<details>
+  <summary>
+  
+  ### Frontend
+  
+  </summary>
+  
 1. [해당 Repository](https://github.com/serbi2012/web-collage-frontend)를 git clone을 한다.
 2. 환견변수 파일(.env)을 생성하고 아래와 같은 형식으로 입력한다.
     
@@ -183,11 +186,17 @@ React 환경에서 드래그 앤 드롭을 구현하고 싶다면 다양한 방�
     $ yarn install
     $ npm start
     ```
-    
-<br/>
 
-### Backend
+</details>
 
+
+<details>
+  <summary>
+  
+  ### Backend
+  
+  </summary>
+  
 1. [해당 Repository](https://github.com/serbi2012/web-collage-backend)를 git clone을 한다.
 2. 환경변수 파일(.env)을 생성하고 아래와 같은 형식으로 입력한다.
     
@@ -201,13 +210,17 @@ React 환경에서 드래그 앤 드롭을 구현하고 싶다면 다양한 방�
     $ npm install
     $ npm run dev
     ```
-    
+
+
+</details>
+
 <br/>  
 <br/>    
 
-### `🛠 기술 스택`
 
-## Frontend
+## 🛠 기술 스택
+
+### Frontend
 
 - React
 - Canvas
@@ -216,7 +229,7 @@ React 환경에서 드래그 앤 드롭을 구현하고 싶다면 다양한 방�
 - Axios
 - Cheerio
 
-## Backend
+### Backend
 
 - Node.js
 - Express
@@ -224,7 +237,7 @@ React 환경에서 드래그 앤 드롭을 구현하고 싶다면 다양한 방�
 - Mongoose
 - Socket io(Server)
 
-## Depoly
+### Depoly
 
 - Chrome Web Store (Frontend)
 - AWS Elastic Beanstalk (Backend)
@@ -234,12 +247,12 @@ React 환경에서 드래그 앤 드롭을 구현하고 싶다면 다양한 방�
 <br/>
   
 
-### `🗓 프로젝트 기간`
+## 🗓 프로젝트 기간
 
-**2022년 11월 7일 ~ 11월 25일**
+**2022년 11월 7일 ~ 11월 27일**
 
 - 11월 7일 ~ 11월 12일 : 아이디어 기획, 기술 검증 및 구현 방법 리서치, 목업 작성, 칸반 작성
-- 11월 13일 ~ 11월 25일 : 개발 진행, 배포, 테스트 작성
+- 11월 13일 ~ 11월 27일 : 개발 진행, 배포, 테스트 작성
 
 #
 <br/>
